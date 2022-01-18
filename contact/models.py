@@ -6,10 +6,9 @@ class Contact(models.Model):
     phone = models.CharField(max_length=18)
     message = models.CharField(max_length=1000)
     create_date = models.DateTimeField()
-    remote_address = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.name + ' (Email: ' + self.email + ', Phone: ' + self.phone + ') :: ' + self.message
+        return '( ' + self.name + ' / ' + self.email + ' / ' + self.phone + ' / ' + str(self.create_date) + ' ) :: ' + self.message
 
     class Meta:
         verbose_name_plural = 'Contact'

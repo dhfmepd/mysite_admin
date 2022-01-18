@@ -17,13 +17,13 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
         <!-- Simplemde CSS -->
-        <link rel="stylesheet" type="text/css" href="{% static 'css/simplemde.min.css' %}">
-        <!-- DataTables Bootstrap4 CSS -->
-        <link rel="stylesheet" type="text/css" href="{% static 'css/dataTables.bootstrap4.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/simplemde.css' %}">
+        <!-- DataTables Bootstrap5 CSS -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.11.3/datatables.min.css"/>
     </head>
     <body id="page-top">
         <!-- Simplemde JS -->
-        <script src="{% static 'js/simplemde.min.js' %}"></script>
+        <script src="{% static 'js/simplemde.js' %}"></script>
         <!-- Navigation-->
         {% if menu_type != 'index' %}
         {% include "common/menu.html" %}
@@ -51,10 +51,8 @@
         </footer>
         <!-- jQuery JS -->
         <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
-        <!-- jQuery DataTables JS -->
-        <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-        <!-- DataTables Bootstrap4 JS -->
-        <script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+        <!-- DataTables Bootstrap5 JS -->
+        <script src="https://cdn.datatables.net/v/bs5/dt-1.11.3/datatables.min.js"></script>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->

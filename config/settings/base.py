@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'common.apps.CommonConfig',
     'board.apps.BoardConfig',
     'contact.apps.ContactConfig',
+    'investment.apps.InvestmentConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

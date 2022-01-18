@@ -256,31 +256,30 @@
         <!-- To make this form functional, sign up at-->
         <!-- https://startbootstrap.com/solution/contact-forms-->
         <!-- to get an API token!-->
-        <form id="contactForm" action="{% url 'contact:contact_create' %}" method="post" data-sb-form-api-token="API_TOKEN">
-            {% csrf_token %}
+        <form id="contactForm" data-sb-form-api-token="API_TOKEN">
             <div class="row align-items-stretch mb-5">
                 <div class="col-md-6">
                     <div class="form-group">
                         <!-- Name input-->
-                        <input class="form-control" id="name" name="name" type="text" placeholder="Your Name *" data-sb-validations="required" />
+                        <input class="form-control" id="name" name="name" type="text" placeholder="Your Name *" data-sb-validations="required" maxlength="10" />
                         <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
                     </div>
                     <div class="form-group">
                         <!-- Email address input-->
-                        <input class="form-control" id="email" name="email" type="email" placeholder="Your Email *" data-sb-validations="required,email" />
+                        <input class="form-control" id="email" name="email" type="email" placeholder="Your Email *" data-sb-validations="required,email" maxlength="50" />
                         <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
                         <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
                     </div>
                     <div class="form-group mb-md-0">
                         <!-- Phone number input-->
-                        <input class="form-control" id="phone" name="phone" type="tel" placeholder="Your Phone *" data-sb-validations="required" />
+                        <input class="form-control" id="phone" name="phone" type="tel" placeholder="Your Phone *" data-sb-validations="required" maxlength="13" />
                         <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is required.</div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group form-group-textarea mb-md-0">
                         <!-- Message input-->
-                        <textarea class="form-control" id="message" name="message" placeholder="Your Message *" data-sb-validations="required"></textarea>
+                        <textarea class="form-control" id="message" name="message" placeholder="Your Message *" data-sb-validations="required" maxlength="1000" ></textarea>
                         <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
                     </div>
                 </div>
@@ -520,4 +519,29 @@
 <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
 <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $("#submitButton").on('click', function() {
+        var data = new FormData($("#contractForm")[0]);
+        data.append("name", $("#name").val());
+        data.append("email", $("#email").val());
+        data.append("phone", $("#phone").val());
+        data.append("message", $("#message").val());
+        data.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'contact:contact_create' %}",
+            processData : false,
+            contentType : false,
+            data: data,
+            success: function (response) {
+               alert('Form submission successful!');
+            },
+        });
+    });
+});
+</script>
 {% endblock %}
