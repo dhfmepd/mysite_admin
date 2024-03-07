@@ -1,25 +1,16 @@
 {% extends 'common/base.html' %}
 {% load board_filter %}
 {% block content %}
-<header class="masthead" style="background-image: url('/static/assets/img/bbs-bg.jpg')">
-    <div class="container position-relative px-4 px-lg-5">
-        <div class="masthead-subheading text-uppercase">Bulletin Board</div>
-    </div>
-</header>
-<!-- List -->
-<section class="page-section" style="padding: 2rem 0;" id="bbs">
-    <!-- Begin Page Content -->
+
     <div class="container-fluid">
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">
-            <i class="fas fa-fw fa-table"></i>
-            <span class="text">Bulletin Board</span>
-        </h1>
-
+        <div class="masthead-subheading text-uppercase">
+            <h3>{{ group_name }}</h3>
+        </div>
         <!-- DataTales Example -->
         <div class="card shadow">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">자유게시판</h6>
+                <h6 class="m-0 font-weight-bold text-primary"></h6>
             </div>
             <div class="card-body">
                 <div class="row pb-3">
@@ -173,7 +164,6 @@
             </div>
         </div>
     </div>
-</section>
 <!-- /.container-fluid -->
 
 

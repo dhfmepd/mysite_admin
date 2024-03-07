@@ -1,37 +1,30 @@
 {% extends 'common/base.html' %}
 {% block content %}
-<header class="masthead" style="background-image: url('/static/assets/img/bbs-bg.jpg')">
-    <div class="container position-relative px-4 px-lg-5">
-        <div class="masthead-subheading text-uppercase">Bulletin Board</div>
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="masthead-subheading text-uppercase">
+        <h3>댓글 등록</h3>
     </div>
-</header>
-<!-- List -->
-<section class="page-section" style="padding: 2rem 0;">
-    <div class="container-fluid">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h5 class="m-0 font-weight-bold text-primary">댓글 등록</h5>
-            </div>
-            <div class="card-body">
-                <form method="post" class="post-form my-3">
-                    {% csrf_token %}
-                    {% include "form_errors.html" %}
-                    <div class="form-group py-2">
-                        <label for="content">댓글내용</label>
-                        <textarea class="form-control"name="content" id="content"
-                                  rows="3">{{ form.content.value|default_if_none:'' }}</textarea>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary btn-icon-split">
-                            <span class="icon text-white-50">
-                                <i class="fas fa-save"></i>
-                            </span>
-                            <span class="text">저장하기</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {% include "form_errors.html" %}
+                <div class="form-group">
+                    <label for="content">댓글내용</label>
+                    <textarea class="form-control" name="content" id="content"
+                              rows="3">{{ form.content.value|default_if_none:'' }}</textarea>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary btn-icon-split">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-save"></i>
+                        </span>
+                        <span class="text">저장하기</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</section>
+</div>
 {% endblock %}

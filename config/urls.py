@@ -21,7 +21,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('common/', include('common.urls')),
     path('board/', include('board.urls')),
-    path('contact/', include('contact.urls')),
-    path('investment/', include('investment.urls')),
     path('', common_view.index, name='index'),
 ]
+# DEBUG False 에 페이지 발동
+handler404 = 'common.views.page_not_found'
+admin.site.site_header = 'MySite Admin'
+admin.site.site_title = 'MySite Admin Portal'
+admin.site.index_title = 'Welcome to MySite Admin Portal'

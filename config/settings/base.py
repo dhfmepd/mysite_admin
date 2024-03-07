@@ -31,8 +31,6 @@ INSTALLED_APPS = [
     'mptt',
     'common.apps.CommonConfig',
     'board.apps.BoardConfig',
-    'contact.apps.ContactConfig',
-    'investment.apps.InvestmentConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,8 +134,8 @@ STATICFILES_DIRS = [
 ]
 
 # 로그인 / 로그아웃 성공후 이동하는 URL
-# LOGIN_REDIRECT_URL = '/common/main/'
-# LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/common/main/'
+LOGOUT_REDIRECT_URL = '/'
 
 # UPLOAD URL
 # UPLOAD_URL = '/upload/'
