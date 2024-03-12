@@ -6,8 +6,8 @@
         <h3>답변 수정</h3>
     </div>
     <div class="card shadow mb-4">
-        <div class="card-body">
-            <form method="post" class="post-form">
+        <form method="post" class="post-form">
+            <div class="card-body">
                 {% csrf_token %}
                 {% include "form_errors.html" %}
                 <div class="form-group py-2">
@@ -18,14 +18,16 @@
                         var simplemde = new SimpleMDE({ element: document.getElementById("content") });
                     </script>
                 </div>
+            </div>
+            <div class="card-footer d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary btn-icon-split">
                     <span class="icon text-white-50">
                         <i class="fas fa-save"></i>
                     </span>
-                    <span class="text">저장하기</span>
+                    <span class="text">저장</span>
                 </button>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

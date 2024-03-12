@@ -21,6 +21,7 @@ def vote_reply(request, reply_id):
     Reply Vote 등록
     """
     reply = get_object_or_404(Reply, pk=reply_id)
+
     if request.user == reply.author:
         messages.error(request, '본인이 작성한 글은 추천할수 없습니다')
     else:

@@ -28,7 +28,6 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
-    'mptt',
     'common.apps.CommonConfig',
     'board.apps.BoardConfig',
     'django.contrib.admin',
