@@ -31,7 +31,7 @@ def board_create(request, group):
     else:
         form = BoardForm()
     context = {'form': form, 'group': group, 'group_name': group_name}
-    return render(request, 'board/board_form.html', context)
+    return render(request, 'board/crawling_main.html', context)
 
 @login_required(login_url='common:login')
 def board_modify(request, board_id):
@@ -61,7 +61,7 @@ def board_modify(request, board_id):
     else:
         form = BoardForm(instance=board)
     context = {'form': form, 'group': board.group, 'group_name': group_name}
-    return render(request, 'board/board_form.html', context)
+    return render(request, 'board/crawling_main.html', context)
 
 @login_required(login_url='common:login')
 def board_delete(request, board_id):
