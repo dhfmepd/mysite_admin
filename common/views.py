@@ -1,7 +1,10 @@
+import json
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from common.forms import UserForm
+from interface.models import ResultData
 
 def index(request):
     """
@@ -17,7 +20,25 @@ def main(request):
     """
     Dashboard 출력
     """
-    return render(request, 'common/main.html', {})
+    exch_data = ResultData.objects.filter(Q(func_name='exch_data_call') & Q(key_name='KRW2USD')).order_by('-receipt_date').first()
+    market_data = ResultData.objects.filter(Q(func_name='market_data_call')).order_by('-receipt_date').first()
+    tsla_data = ResultData.objects.filter(Q(func_name='finviz_data_call') & Q(key_name='TSLA')).order_by('-receipt_date').first()
+
+    market_json_data = json.loads(market_data.result_data)
+
+    if not market_json_data.get('S&P 500'):
+        snp500 = market_json_data.get('S&P Futures')
+    else:
+        snp500 = market_json_data.get('S&P 500')
+
+    main_data = {
+        'exch_rate_usd': json.loads(exch_data.result_data).get('Exch Rate'),
+        'vix': market_json_data.get('Vix'),
+        'bitcoin_usd': market_json_data.get('Bitcoin USD'),
+        'snp500': snp500
+    }
+
+    return render(request, 'common/main.html', {'main_data': main_data})
 
 def signup(request):
     """

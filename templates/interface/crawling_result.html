@@ -1,0 +1,50 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="h3 mb-2 text-gray-800">Data Extract</h1>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Web Crawling</h6>
+            </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="user_agent">User Agent</label>
+                        <input type="text" class="form-control" name="user_agent" id="user_agent" readonly
+                               value="{{ result.user_agent }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="target_url">Target URL</label>
+                        <input type="text" class="form-control" name="target_url" id="target_url" readonly
+                               value="{{ result.target_url }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="func_name">Function & Key Name</label>
+                        <div class="d-flex justify-content-between">
+                            <input type="text" class="form-control mr-2" name="func_name" id="func_name" readonly
+                                   value="{{ result.func_name }}">
+                            <input type="text" class="form-control col-md-3" name="key_name" id="key_name" readonly
+                               value="{{ result.key_name }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="result_data">Result Data</label>
+                        <textarea class="form-control" name="result_data" readonly
+                                  id="result_data" rows="10">{{ result.result_data }}</textarea>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <div class="d-flex justify-content-end">
+                        <a href="{% url 'interface:crawling_main' %}" class="btn btn-primary btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span class="text">뒤로</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

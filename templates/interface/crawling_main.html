@@ -25,22 +25,42 @@
                     <div class="form-group">
                         <label for="user_agent">User Agent</label>
                         <input type="text" class="form-control" name="user_agent" id="user_agent"
-                               value="{{ form.user_agent.value|default_if_none:'' }}">
+                               value="{{ form.user_agent.value|default_if_none:'Mozilla/5.0 (Linux; Android 9; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.83 Mobile Safari/537.36' }}">
                     </div>
+
                     <div class="form-group">
                         <label for="target_url">Target URL</label>
+                        <div class="d-flex justify-content-between">
+                            <div class="dropdown mr-2">
+                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                    name="target_action" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Select Target
+                                </button>
+                                <div class="dropdown-menu animated--fade-in"
+                                    aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('1');">Stock Data</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('2');">Exchange Rate</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('3');">Market Summary</a>
+                                </div>
+                            </div>
                         <input type="text" class="form-control" name="target_url" id="target_url"
                                value="{{ form.target_url.value|default_if_none:'' }}">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="soup_data">SOUP Data (JSON Type)</label>
-                        <textarea class="form-control" name="soup_data"
-                                  id="soup_data" rows="10">{{ form.soup_data.value|default_if_none:'' }}</textarea>
+                        <label for="func_name">Function & Key Name</label>
+                        <div class="d-flex justify-content-between">
+                            <input type="text" class="form-control mr-2" name="func_name" id="func_name"
+                                   value="{{ form.func_name.value|default_if_none:'' }}"/>
+                            <input type="text" class="form-control col-md-3" name="key_name" id="key_name"
+                               value="{{ form.key_name.value|default_if_none:'' }}"/>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="result_data">Result Data</label>
-                        <textarea class="form-control" name="result_data"
-                                  id="result_data" rows="10">{{ form.result_data.value|default_if_none:'' }}</textarea>
+                        <label for="base_data">Base Data(JSON)</label>
+                        <textarea class="form-control" name="base_data"
+                                  id="base_data" rows="10">{{ form.base_data.value|default_if_none:'' }}</textarea>
                     </div>
                 </div>
                 <div class="card-footer d-flex justify-content-between">
@@ -57,4 +77,22 @@
         </div>
     </div>
 
+<script type='text/javascript'>
+function setDefaultData(idx) {
+    if(idx == '1') {
+        document.getElementById("target_url").value = 'https://finviz.com/quote.ashx?t=TSLA&p=d';
+        document.getElementById("func_name").value = 'finviz_data_call';
+        document.getElementById("key_name").value = 'TSLA';
+    } else if(idx == '2') {
+        document.getElementById("target_url").value = 'https://kr.investing.com/currencies/usd-krw';
+        document.getElementById("func_name").value = 'exch_data_call';
+        document.getElementById("key_name").value = 'KRW2USD';
+        document.getElementById("base_data").value = "{'From Currency': 'KRW', 'To Currency': 'USD'}";
+    } else if(idx == '3') {
+        document.getElementById("target_url").value = 'https://finance.yahoo.com/';
+        document.getElementById("func_name").value = 'market_data_call';
+        document.getElementById("key_name").value = 'DEFAULT';
+    }
+}
+</script>
 {% endblock %}
