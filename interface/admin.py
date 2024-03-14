@@ -4,9 +4,9 @@ from django.http import HttpResponse
 from .models import ResultData
 
 class ResultDataAdmin(admin.ModelAdmin):
-    search_fields = ['target_url', 'key_name']
-    list_display = ['target_url', 'func_name', 'key_name', 'receipt_date']
-    list_filter = ['target_url', 'key_name']
+    search_fields = ['func_name', 'key_name']
+    list_display = ['func_name', 'key_name', 'target_url', 'receipt_date']
+    list_filter = ['func_name', 'key_name']
     actions = ["export_as_csv"]
 
     def export_as_csv(self, request, queryset):

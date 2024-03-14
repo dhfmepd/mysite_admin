@@ -22,7 +22,9 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Exchange Rate (KRW->USD)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ main_data.exch_rate_usd }} 원</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ main_data.exch_rate }} 원<div class="text-xs font-weight-bold text-{{ main_data.exch_rate_color }}">{{ main_data.exch_rate_change }} ({{ main_data.exch_rate_change_percent }})</div>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -37,9 +39,11 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">S&P 500
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">S&P 500
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ main_data.snp500 }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ main_data.snp500 }}<div class="text-xs font-weight-bold text-{{ main_data.snp500_color }}">{{ main_data.snp500_change }} ({{ main_data.snp500_change_percent }})</div>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-chart-line fa-2x text-gray-300"></i>
@@ -54,12 +58,14 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Bitcoin (USD)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$ {{ main_data.bitcoin_usd }}</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Nasdaq
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ main_data.nasdaq }}<div class="text-xs font-weight-bold text-{{ main_data.nasdaq_color }}">{{ main_data.nasdaq_change }} ({{ main_data.nasdaq_change_percent }})</div>
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-coins fa-2x text-gray-300"></i>
+                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -71,12 +77,14 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Volatility Index</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ main_data.vix }}</div>
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Bitcoin (USD)
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                $ {{ main_data.bitcoin }}<div class="text-xs font-weight-bold text-{{ main_data.bitcoin_color }}">{{ main_data.bitcoin_change }} ({{ main_data.bitcoin_change_percent }})</div>
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-clipboard-check fa-2x text-gray-300"></i>
+                            <i class="fas fa-coins fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -85,6 +93,54 @@
     </div>
 
     <!-- Content Row -->
+    <div class="card mb-4">
+        <!-- DataTales Example -->
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Tech Stock 18</h6>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Symbol</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Price</th>
+                                <th class="text-center">Change(%)</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% if tech_list %}
+                            {% for tech_data in tech_list %}
+                            <tr class="text-center">
+                                <td>{{ tech_data.no }}</td>
+                                <td>{{ tech_data.symbol }}</td>
+                                <td>{{ tech_data.name }}</td>
+                                <td>{{ tech_data.price }}</td>
+                                {% if "-" in tech_data.change %}
+                                <td><div class="text-danger">{{ tech_data.change }} ({{ tech_data.change_percent }})</div></td>
+                                {% elif "+" in tech_data.change %}
+                                <td><div class="text-success">{{ tech_data.change }} ({{ tech_data.change_percent }})</div></td>
+                                {% else %}
+                                <td>{{ tech_data.change }} ({{ tech_data.change_percent }})</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">데이터가 없습니다.</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
 

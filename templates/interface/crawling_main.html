@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <label for="user_agent">User Agent</label>
                         <input type="text" class="form-control" name="user_agent" id="user_agent"
-                               value="{{ form.user_agent.value|default_if_none:'Mozilla/5.0 (Linux; Android 9; SM-G975F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.83 Mobile Safari/537.36' }}">
+                               value="{{ form.user_agent.value|default_if_none:'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' }}">
                     </div>
 
                     <div class="form-group">
@@ -41,7 +41,9 @@
                                     aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="#" onclick="setDefaultData('1');">Stock Data</a>
                                     <a class="dropdown-item" href="#" onclick="setDefaultData('2');">Exchange Rate</a>
-                                    <a class="dropdown-item" href="#" onclick="setDefaultData('3');">Market Summary</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('3');">World Indices</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('4');">Cryptocurrencies</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('5');">Tech Stock 18</a>
                                 </div>
                             </div>
                         <input type="text" class="form-control" name="target_url" id="target_url"
@@ -58,7 +60,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="base_data">Base Data(JSON)</label>
+                        <label for="base_data">Base Data (JSON)</label>
                         <textarea class="form-control" name="base_data"
                                   id="base_data" rows="10">{{ form.base_data.value|default_if_none:'' }}</textarea>
                     </div>
@@ -89,10 +91,19 @@ function setDefaultData(idx) {
         document.getElementById("key_name").value = 'KRW2USD';
         document.getElementById("base_data").value = "{'From Currency': 'KRW', 'To Currency': 'USD'}";
     } else if(idx == '3') {
-        document.getElementById("target_url").value = 'https://finance.yahoo.com/';
-        document.getElementById("func_name").value = 'market_data_call';
+        document.getElementById("target_url").value = 'https://finance.yahoo.com/world-indices/';
+        document.getElementById("func_name").value = 'index_data_call';
+        document.getElementById("key_name").value = 'DEFAULT';
+    } else if(idx == '4') {
+        document.getElementById("target_url").value = 'https://finance.yahoo.com/crypto/';
+        document.getElementById("func_name").value = 'crypto_data_call';
+        document.getElementById("key_name").value = 'DEFAULT';
+    } else if(idx == '5') {
+        document.getElementById("target_url").value = 'https://finance.yahoo.com/u/yahoo-finance/watchlists/tech-stocks-that-move-the-market';
+        document.getElementById("func_name").value = 'tech_data_call';
         document.getElementById("key_name").value = 'DEFAULT';
     }
+
 }
 </script>
 {% endblock %}

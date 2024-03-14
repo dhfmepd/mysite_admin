@@ -27,8 +27,11 @@ def main(request):
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
             # Chrome 브라우저 열기
-            options = Options()
-            options.add_argument('user-agent=' + user_agent)
+            if not user_agent:
+                options = webdriver.ChromeOptions()
+            else:
+                options = Options()
+                options.add_argument('user-agent=' + user_agent)
             options.add_argument('headless')
 
             driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
@@ -77,11 +80,64 @@ def finviz_data_call(mapData, soup):
                 keyword = td.text.strip()
                 mapData[keyword] = tds[tdIdx + 1].text.strip()
 
-def exch_data_call(mapData, soup):
-    mapData["Exch Rate"] = soup.find('div', attrs={"data-test": "instrument-price-last"}).text
+    table = soup.find('table', {"class": "js-table-ratings styled-table-new is-rounded is-small"})
+    trs = table.tbody.find_all('tr')
 
-def market_data_call(mapData, soup):
-    lis = soup.find('div', attrs={"id": "market-summary"}).find_all('li')
-    for index, li in enumerate(lis):
-        keyword = li.find('a')['title'].strip()
-        mapData[keyword] = li.find('fin-streamer').text.strip()
+    rating_list = list()
+
+    for trIdx, tr in enumerate(trs):
+        tds = tr.find_all('td')
+        rating_dict = dict()
+        rating_dict['Date'] = tds[0].text
+        rating_dict['Action'] = tds[1].text
+        rating_dict['Analyst'] = tds[2].text
+        rating_dict['Rating Change'] = tds[3].text
+        rating_dict['Price Target Change'] = tds[4].text
+        rating_list.append(rating_dict)
+
+    mapData['Rating List'] = rating_list
+
+def exch_data_call(mapData, soup):
+    div = soup.find('div', attrs={"data-test": "instrument-header-details"})
+    mapData["Exch Rate"] = div.find('div', attrs={"data-test": "instrument-price-last"}).text
+    mapData["Exch Rate Change"] = div.find('span', attrs={"data-test": "instrument-price-change"}).text
+    mapData["Exch Rate Change Percent"] = div.find('span', attrs={"data-test": "instrument-price-change-percent"}).text.replace('(', '').replace(')', '')
+
+def index_data_call(mapData, soup):
+    trs = soup.find('div', attrs={"data-yaft-module": "tdv2-applet-smpl-data-tbl"}).find_all('tr')
+    for index, tr in enumerate(trs):
+        if index > 0:
+            keyword = tr.find('td', attrs={"aria-label": "Name"}).text.strip()
+            mapData[keyword] = tr.find('td', attrs={"aria-label": "Last Price"}).text.strip()
+            keyword = keyword + ' Change'
+            mapData[keyword] = tr.find('td', attrs={"aria-label": "Change"}).text.strip()
+            keyword = keyword + ' Percent'
+            mapData[keyword] = tr.find('td', attrs={"aria-label": "% Change"}).text.strip()
+
+def crypto_data_call(mapData, soup):
+    trs = soup.find('div', attrs={"data-yaft-module": "tdv2-applet-smpl-data-tbl"}).find_all('tr')
+    for index, tr in enumerate(trs):
+        if index > 0:
+            keyword = tr.find('td', attrs={"aria-label": "Name"}).text.strip()
+            mapData[keyword] = tr.find('td', attrs={"aria-label": "Price (Intraday)"}).text.strip()
+            keyword = keyword + ' Change'
+            mapData[keyword] = tr.find('td', attrs={"aria-label": "Change"}).text.strip()
+            keyword = keyword + ' Percent'
+            mapData[keyword] = tr.find('td', attrs={"aria-label": "% Change"}).text.strip()
+
+def tech_data_call(mapData, soup):
+    section = soup.find('section', attrs={"data-test": "cwl-symbols"})
+    trs = section.find_all('tr')
+    result_list = list()
+    for index, tr in enumerate(trs):
+        if index > 0:
+            result_data = dict()
+            result_data['no'] = index
+            result_data['symbol'] = tr.find_all('td')[0].text.strip()
+            result_data['name'] = tr.find_all('td')[1].text.strip()
+            result_data['price'] = tr.find_all('td')[2].text.strip()
+            result_data['change'] = tr.find_all('td')[3].text.strip()
+            result_data['change_percent'] = tr.find_all('td')[4].text.strip()
+            result_list.append(result_data)
+
+    mapData['tech_list'] = result_list

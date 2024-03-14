@@ -21,24 +21,43 @@ def main(request):
     Dashboard 출력
     """
     exch_data = ResultData.objects.filter(Q(func_name='exch_data_call') & Q(key_name='KRW2USD')).order_by('-receipt_date').first()
-    market_data = ResultData.objects.filter(Q(func_name='market_data_call')).order_by('-receipt_date').first()
-    tsla_data = ResultData.objects.filter(Q(func_name='finviz_data_call') & Q(key_name='TSLA')).order_by('-receipt_date').first()
+    index_data = ResultData.objects.filter(Q(func_name='index_data_call')).order_by('-receipt_date').first()
+    crypto_data = ResultData.objects.filter(Q(func_name='crypto_data_call')).order_by('-receipt_date').first()
+    tech_data = ResultData.objects.filter(Q(func_name='tech_data_call')).order_by('-receipt_date').first()
 
-    market_json_data = json.loads(market_data.result_data)
-
-    if not market_json_data.get('S&P 500'):
-        snp500 = market_json_data.get('S&P Futures')
-    else:
-        snp500 = market_json_data.get('S&P 500')
+    exch_json_data = json.loads(exch_data.result_data)
+    index_json_data = json.loads(index_data.result_data)
+    crypto_json_data = json.loads(crypto_data.result_data)
+    tech_list = json.loads(tech_data.result_data).get('tech_list')
 
     main_data = {
-        'exch_rate_usd': json.loads(exch_data.result_data).get('Exch Rate'),
-        'vix': market_json_data.get('Vix'),
-        'bitcoin_usd': market_json_data.get('Bitcoin USD'),
-        'snp500': snp500
+        'exch_rate': exch_json_data.get('Exch Rate'),
+        'exch_rate_change': exch_json_data.get('Exch Rate Change'),
+        'exch_rate_change_percent': exch_json_data.get('Exch Rate Change Percent'),
+        'exch_rate_color': colorSelection(exch_json_data.get('Exch Rate Change')),
+        'snp500': index_json_data.get('S&P 500'),
+        'snp500_change': index_json_data.get('S&P 500 Change'),
+        'snp500_change_percent': index_json_data.get('S&P 500 Change Percent'),
+        'snp500_color': colorSelection(index_json_data.get('S&P 500 Change')),
+        'nasdaq': index_json_data.get('NASDAQ Composite'),
+        'nasdaq_change': index_json_data.get('NASDAQ Composite Change'),
+        'nasdaq_change_percent': index_json_data.get('NASDAQ Composite Change Percent'),
+        'nasdaq_color': colorSelection(index_json_data.get('NASDAQ Composite Change')),
+        'bitcoin': crypto_json_data.get('Bitcoin USD'),
+        'bitcoin_change': crypto_json_data.get('Bitcoin USD Change'),
+        'bitcoin_change_percent': crypto_json_data.get('Bitcoin USD Change Percent'),
+        'bitcoin_color': colorSelection(crypto_json_data.get('Bitcoin USD Change'))
     }
 
-    return render(request, 'common/main.html', {'main_data': main_data})
+    return render(request, 'common/main.html', {'main_data': main_data, 'tech_list': tech_list})
+
+def colorSelection(data):
+    if data[0:1] == '+':
+        return 'success'
+    elif data[0:1] == '-':
+        return 'danger'
+    else:
+        return 'dark'
 
 def signup(request):
     """
