@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <label for="user_agent">User Agent</label>
                         <input type="text" class="form-control" name="user_agent" id="user_agent"
-                               value="{{ form.user_agent.value|default_if_none:'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' }}">
+                               value="{{ form.user_agent.value|default_if_none:'' }}">
                     </div>
 
                     <div class="form-group">
@@ -40,10 +40,12 @@
                                 <div class="dropdown-menu animated--fade-in"
                                     aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="#" onclick="setDefaultData('1');">Stock Data</a>
-                                    <a class="dropdown-item" href="#" onclick="setDefaultData('2');">Exchange Rate</a>
-                                    <a class="dropdown-item" href="#" onclick="setDefaultData('3');">World Indices</a>
-                                    <a class="dropdown-item" href="#" onclick="setDefaultData('4');">Cryptocurrencies</a>
-                                    <a class="dropdown-item" href="#" onclick="setDefaultData('5');">Tech Stock 18</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('2');">Stock History</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('3');">Earnings History</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('4');">Exchange Rate</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('5');">World Indices</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('6');">Cryptocurrencies</a>
+                                    <a class="dropdown-item" href="#" onclick="setDefaultData('7');">Tech Stock 18</a>
                                 </div>
                             </div>
                         <input type="text" class="form-control" name="target_url" id="target_url"
@@ -53,9 +55,9 @@
                     <div class="form-group">
                         <label for="func_name">Function & Key Name</label>
                         <div class="d-flex justify-content-between">
-                            <input type="text" class="form-control mr-2" name="func_name" id="func_name"
+                            <input type="text" class="form-control col-md-4 mr-2" name="func_name" id="func_name"
                                    value="{{ form.func_name.value|default_if_none:'' }}"/>
-                            <input type="text" class="form-control col-md-3" name="key_name" id="key_name"
+                            <input type="text" class="form-control" name="key_name" id="key_name"
                                value="{{ form.key_name.value|default_if_none:'' }}"/>
                         </div>
                     </div>
@@ -81,29 +83,43 @@
 
 <script type='text/javascript'>
 function setDefaultData(idx) {
-    if(idx == '1') {
-        document.getElementById("target_url").value = 'https://finviz.com/quote.ashx?t=TSLA&p=d';
-        document.getElementById("func_name").value = 'finviz_data_call';
-        document.getElementById("key_name").value = 'TSLA';
-    } else if(idx == '2') {
+    if (idx == '1') {
+        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("target_url").value = 'https://finviz.com/quote.ashx?t={key}&p=d';
+        document.getElementById("func_name").value = 'stock_data_call';
+        document.getElementById("key_name").value = 'TSLA,AAPL,PLTR,AMZN,GOOG,CPNG';
+    } else if (idx == '2') {
+        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("target_url").value = 'https://finance.yahoo.com/quote/{key}/history';
+        document.getElementById("func_name").value = 'stock_hist_data_call';
+        document.getElementById("key_name").value = 'TSLA,AAPL,PLTR,AMZN,GOOG,CPNG';
+    } else if (idx == '3') {
+        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("target_url").value = 'https://finance.yahoo.com/quote/{key}/analysis';
+        document.getElementById("func_name").value = 'stock_earning_data_call';
+        document.getElementById("key_name").value = 'TSLA,AAPL,PLTR,AMZN,GOOG,CPNG';
+    } else if (idx == '4') {
+        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
         document.getElementById("target_url").value = 'https://kr.investing.com/currencies/usd-krw';
         document.getElementById("func_name").value = 'exch_data_call';
         document.getElementById("key_name").value = 'KRW2USD';
         document.getElementById("base_data").value = "{'From Currency': 'KRW', 'To Currency': 'USD'}";
-    } else if(idx == '3') {
+    } else if (idx == '5') {
+        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
         document.getElementById("target_url").value = 'https://finance.yahoo.com/world-indices/';
         document.getElementById("func_name").value = 'index_data_call';
         document.getElementById("key_name").value = 'DEFAULT';
-    } else if(idx == '4') {
+    } else if (idx == '6') {
+        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
         document.getElementById("target_url").value = 'https://finance.yahoo.com/crypto/';
         document.getElementById("func_name").value = 'crypto_data_call';
         document.getElementById("key_name").value = 'DEFAULT';
-    } else if(idx == '5') {
+    } else if (idx == '7') {
+        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
         document.getElementById("target_url").value = 'https://finance.yahoo.com/u/yahoo-finance/watchlists/tech-stocks-that-move-the-market';
         document.getElementById("func_name").value = 'tech_data_call';
         document.getElementById("key_name").value = 'DEFAULT';
     }
-
 }
 </script>
 {% endblock %}
