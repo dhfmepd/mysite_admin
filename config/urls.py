@@ -22,6 +22,7 @@ urlpatterns = [
     path('common/', include('common.urls')),
     path('board/', include('board.urls')),
     path('interface/', include('interface.urls')),
+    path('invest/', include('invest.urls')),
     path('', common_view.index, name='index'),
 ]
 # DEBUG False 에 페이지 발동

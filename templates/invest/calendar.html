@@ -1,0 +1,55 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Calendar</h1>
+    </div>
+
+    <!-- DataTales Example -->
+    <div class="card shadow">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">{{ month_text }} {{ year }}</h6>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="calendar_header">
+                            <th class="text-center">Mon.</th>
+                            <th class="text-center">Tue.</th>
+                            <th class="text-center">Wed.</th>
+                            <th class="text-center">Thu.</th>
+                            <th class="text-center">Fri.</th>
+                            <th class="text-center">Sat.</th>
+                            <th class="text-center text-danger">Sun.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in cal_data %}
+                        <tr>
+                            {% for day, color in week %}
+                                <td class="{{ color }}"  {% if day == today.day %} style="background-color: rgb(252 241 202);" {% endif %}>
+                                {% if day %}
+                                    <div class="small text-left" >{{ day }}</div>
+                                    {% if day <= today.day %}
+                                    <!--<div class="count">{{ count }}개</div>-->
+
+                                    {% endif %}
+                                    <div class="small text-right" >
+                                        <a href="{% url 'invest:note_create_calendar' day  %}"><i class="fas fa-pen-square"></i> Write</a>
+                                    </div>
+                                {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

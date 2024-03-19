@@ -28,6 +28,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'invest.apps.InvestConfig',
     'interface.apps.InterfaceConfig',
     'common.apps.CommonConfig',
     'board.apps.BoardConfig',
