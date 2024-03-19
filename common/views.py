@@ -59,7 +59,7 @@ def main(request):
     main_data['eps_ttm'] = stock_dict_data.get('EPS (ttm)')
     main_data['market_cap'] = stock_dict_data.get('Market Cap')
     main_data['earnings'] = stock_dict_data.get('Earnings')
-    main_data['eps_ttm'] = stock_dict_data.get('EPS(ttm)')
+    main_data['eps_ttm'] = stock_dict_data.get('EPS (ttm)')
     main_data['eps_next_yr'] = stock_dict_data.get('EPS next Y')
 
     main_data['peg'] = stock_dict_data.get('PEG')
@@ -76,20 +76,18 @@ def main(request):
     main_data['pt'] = stock_dict_data.get('Target Price')
 
 
-
-
     main_data['exch_rate'] = exch_json_data.get('Exch Rate')
     main_data['exch_rate_change'] = exch_json_data.get('Exch Rate Change')
     main_data['exch_rate_change_percent'] = exch_json_data.get('Exch Rate Change Percent')
-    main_data['exch_rate_color'] = colorSelection(exch_json_data.get('Exch Rate Change')),
+    main_data['exch_rate_color'] = colorSelection(exch_json_data.get('Exch Rate Change'))
     main_data['snp500'] = index_json_data.get('S&P 500')
     main_data['snp500_change'] = index_json_data.get('S&P 500 Change')
     main_data['snp500_change_percent'] = index_json_data.get('S&P 500 Change Percent')
-    main_data['snp500_color'] = colorSelection(index_json_data.get('S&P 500 Change')),
+    main_data['snp500_color'] = colorSelection(index_json_data.get('S&P 500 Change'))
     main_data['nasdaq'] = index_json_data.get('NASDAQ Composite')
     main_data['nasdaq_change'] = index_json_data.get('NASDAQ Composite Change')
     main_data['nasdaq_change_percent'] = index_json_data.get('NASDAQ Composite Change Percent')
-    main_data['nasdaq_color'] = colorSelection(index_json_data.get('NASDAQ Composite Change')),
+    main_data['nasdaq_color'] = colorSelection(index_json_data.get('NASDAQ Composite Change'))
     main_data['bitcoin'] = crypto_json_data.get('Bitcoin USD')
     main_data['bitcoin_change'] = crypto_json_data.get('Bitcoin USD Change')
     main_data['bitcoin_change_percent'] = crypto_json_data.get('Bitcoin USD Change Percent')

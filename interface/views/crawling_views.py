@@ -81,7 +81,7 @@ def main(request):
 
 def stock_data_call(mapData, soup):
     mapData["Ticker"] = soup.find('div', attrs={"class": "quote-header_ticker-wrapper"}).h1.text
-    mapData["Ticker_Name"] = soup.find('div', attrs={"class": "quote-header_ticker-wrapper"}).h2.text.strip()
+    mapData["Ticker Name"] = soup.find('div', attrs={"class": "quote-header_ticker-wrapper"}).h2.text.strip()
 
     table = soup.find('table', {"class": "js-snapshot-table snapshot-table2 screener_snapshot-table-body"})
     trs = table.tbody.find_all('tr')
