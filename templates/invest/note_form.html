@@ -1,0 +1,120 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <h1 class="h3 mb-2 text-gray-800">{{ month_text }} {{ year }}</h1>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Note 작성</h6>
+            </div>
+            <form method="post">
+                <div class="card-body">
+                    {% csrf_token %}
+                    <!-- 오류표시 Start -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                        {% for field in form %}
+                            {% if field.errors %}
+                            <strong>{{ field.label }}</strong>
+                            {{ field.errors }}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                    <!-- 오류표시 End -->
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="type">Type</label>
+                                <select id="type" class="form-control" onchange="changeType(this)">
+                                    <option selected>Memo</option>
+                                    <option>Trade</option>
+                                </select>
+                            </div>
+                            <div id="stateGroup" class="form-group col-md-2" hidden="true">
+                                <label for="state">State</label>
+                                <select id="state" class="form-control">
+                                    <option selected>Buy</option>
+                                    <option>Sell</option>
+                                </select>
+                            </div>
+                            <div id="tickerGroup" class="form-group col-md-2" hidden="true">
+                                <label for="ticker">Ticker</label>
+                                <input type="text" class="form-control" name="ticker" id="ticker"
+                                       value="{{ form.ticker.value|default_if_none:'' }}"
+                                       placeholder="AAPL">
+                            </div>
+                            <div id="priceGroup" class="form-group col-md-3" hidden="true">
+                                <label for="price">Price</label>
+                                <input type="text" class="form-control text-right" name="price" id="price"
+                                       value="{{ form.price.value|default_if_none:'' }}"
+                                       placeholder="0">
+                            </div>
+                            <div id="quantityGroup" class="form-group col-md-3" hidden="true">
+                                <label for="quantity">Quantity</label>
+                                <input type="text" class="form-control text-right" name="quantity" id="quantity"
+                                       value="{{ form.quantity.value|default_if_none:'' }}"
+                                       placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" class="form-control" name="subject" id="subject"
+                               value="{{ form.subject.value|default_if_none:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Content</label>
+                        <textarea class="form-control" name="content"
+                                  id="content" rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
+                        <script>
+                            var simplemde = new SimpleMDE({ element: document.getElementById("content") });
+                        </script>
+                    </div>
+
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a href="{% url 'invest:calendar' %}" class="btn btn-primary btn-icon-split">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-arrow-left"></i>
+                        </span>
+                        <span class="text">목록</span>
+                    </a>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span class="text">저장</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script type='text/javascript'>
+function changeType(target) {
+    var stateGroup = document.getElementById("stateGroup");
+    var tickerGroup = document.getElementById("tickerGroup");
+    var priceGroup = document.getElementById("priceGroup");
+    var quantityGroup = document.getElementById("quantityGroup");
+    if(target.selectedIndex == 1) {
+        stateGroup.hidden = false;
+        tickerGroup.hidden = false;
+        priceGroup.hidden = false;
+        quantityGroup.hidden = false;
+    } else {
+        stateGroup.hidden = true;
+        tickerGroup.hidden = true;
+        priceGroup.hidden = true;
+        quantityGroup.hidden = true;
+
+        document.getElementById("state").selectedIndex = 0;
+        document.getElementById("ticker").value = "";
+        document.getElementById("price").value = "0";
+        document.getElementById("quantity").value = "0";
+    }
+}
+</script>
+{% endblock %}

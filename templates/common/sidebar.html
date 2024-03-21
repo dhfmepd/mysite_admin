@@ -50,35 +50,29 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseData"
+                    aria-expanded="true" aria-controls="collapseData">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Data Extract</span>
+                    <span>Data</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseData" class="collapse" aria-labelledby="headingData" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Data Extract:</h6>
+                        <h6 class="collapse-header">Data:</h6>
                         <a class="collapse-item" href="{% url 'interface:crawling_main' %}">Web Crawling</a>
-                        <a class="collapse-item" href="{% url 'invest:calendar' %}">Calendar</a>
                     </div>
                 </div>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
+             <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseInvest"
+                    aria-expanded="true" aria-controls="collapseInvest">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Invest</span>
                 </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
+                <div id="collapseInvest" class="collapse" aria-labelledby="headingInvest" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
+                        <h6 class="collapse-header">Invest:</h6>
+                        <a class="collapse-item" href="{% url 'invest:calendar' %}">Calendar</a>
                     </div>
                 </div>
             </li>

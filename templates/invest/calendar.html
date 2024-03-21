@@ -31,15 +31,19 @@
                         {% for week in cal_data %}
                         <tr>
                             {% for day, color in week %}
-                                <td class="{{ color }}"  {% if day == today.day %} style="background-color: rgb(252 241 202);" {% endif %}>
+                                <td {% if day == today.day %} style="background-color: rgb(252 241 202);" {% endif %}>
                                 {% if day %}
-                                    <div class="small text-left" >{{ day }}</div>
-                                    {% if day <= today.day %}
-                                    <!--<div class="count">{{ count }}개</div>-->
+                                    <div class="d-flex justify-content-between">
+                                        <div class="small text-left {{ color }}" >{{ day }}</div>
+                                        <a href="{% url 'invest:note_create_calendar'  %}" class="btn btn-info btn-circle btn-sm">
+                                            <i class="fas fa-pen-square"></i>
+                                        </a>
+                                    </div>
+                                    <div class="mb-4 py-3">
+                                        {% if day <= today.day %}
+                                        <!--<div class="count">{{ count }}개</div>-->
 
-                                    {% endif %}
-                                    <div class="small text-right" >
-                                        <a href="{% url 'invest:note_create_calendar' day  %}"><i class="fas fa-pen-square"></i> Write</a>
+                                        {% endif %}
                                     </div>
                                 {% endif %}
                                 </td>
@@ -50,6 +54,41 @@
                 </table>
             </div>
         </div>
+        <div class="card-footer d-flex justify-content-between">
+            <button class="previous btn btn-primary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-arrow-left"></i>
+                </span>
+            </button>
+            <button class="next btn btn-primary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-arrow-right"></i>
+                </span>
+            </button>
+        </div>
     </div>
+    <form id="searchForm" method="get" action="{% url 'invest:calendar' %}">
+        <input type="hidden" id="year" name="year" value="{{ year }}">
+        <input type="hidden" id="month" name="month" value="{{ month }}">
+        <input type="hidden" id="mode" name="mode">
+    </form>
 </div>
+
+<script type='text/javascript'>
+const previous_elements = document.getElementsByClassName("previous");
+Array.from(previous_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        document.getElementById("mode").value = "prev";
+        document.getElementById("searchForm").submit();
+    });
+});
+const next_elements = document.getElementsByClassName("next");
+Array.from(next_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        document.getElementById("mode").value = "next";
+        document.getElementById("searchForm").submit();
+    });
+});
+</script>
+
 {% endblock %}
