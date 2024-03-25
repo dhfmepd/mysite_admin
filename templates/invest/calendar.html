@@ -30,19 +30,20 @@
                     <tbody>
                         {% for week in cal_data %}
                         <tr>
-                            {% for day, color in week %}
+                            {% for day, color, note in week %}
                                 <td {% if day == today.day %} style="background-color: rgb(252 241 202);" {% endif %}>
                                 {% if day %}
                                     <div class="d-flex justify-content-between">
                                         <div class="small text-left {{ color }}" >{{ day }}</div>
-                                        <a href="{% url 'invest:note_create_calendar'  %}" class="btn btn-info btn-circle btn-sm">
+                                        <a href="#" data-day="{{ day }}" class="write btn btn-info btn-circle btn-sm">
                                             <i class="fas fa-pen-square"></i>
                                         </a>
                                     </div>
                                     <div class="mb-4 py-3">
-                                        {% if day <= today.day %}
-                                        <!--<div class="count">{{ count }}개</div>-->
-
+                                        {% if note.count == 0 %}
+                                        <div>-</div>
+                                        {% else %}
+                                        <a href="#" data-day="{{ day }}" class="notecount">{{ note.count }} 건</a>
                                         {% endif %}
                                     </div>
                                 {% endif %}
@@ -72,6 +73,9 @@
         <input type="hidden" id="month" name="month" value="{{ month }}">
         <input type="hidden" id="mode" name="mode">
     </form>
+    <form id="regForm" method="get" action="{% url 'invest:note_create_calendar' %}">
+        <input type="hidden" id="record_date" name="record_date">
+    </form>
 </div>
 
 <script type='text/javascript'>
@@ -87,6 +91,33 @@ Array.from(next_elements).forEach(function(element) {
     element.addEventListener('click', function() {
         document.getElementById("mode").value = "next";
         document.getElementById("searchForm").submit();
+    });
+});
+const write_elements = document.getElementsByClassName("write");
+Array.from(write_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        if(confirm("작성 하시겠습니까?")) {
+            var year = "{{ year }}";
+            var month = "{{ month }}";
+            var day = this.dataset.day;
+
+            var record_date = "";
+
+            if(month.length == 1) {
+                record_date = year + "-0" + month;
+            } else {
+                record_date = year + "-" + month;
+            }
+
+            if(day.length == 1) {
+                record_date = record_date + "-0" + day;
+            } else {
+                record_date = record_date + "-" + day;
+            }
+
+            document.getElementById("record_date").value = record_date;
+            document.getElementById("regForm").submit();
+        };
     });
 });
 </script>
