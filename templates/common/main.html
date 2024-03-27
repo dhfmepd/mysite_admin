@@ -142,7 +142,7 @@
 
     <hr>
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <div id="stock_area" class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">{{ symbol }}</h1>
         <div class="dropdown d-none d-sm-inline-block">
             <button class="btn btn-primary dropdown-toggle" type="button"
@@ -275,6 +275,12 @@
 <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
 
 <script type='text/javascript'>
+{% if anchor %}
+$(document).ready(function(){
+    window.location = '#{{ anchor }}'
+});
+{% endif %}
+
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';

@@ -20,7 +20,12 @@ def main(request):
     """
     Dashboard 출력
     """
-    symbol = request.GET.get('symbol', 'TSLA')  # 페이지
+    symbol = request.GET.get('symbol', '')  # 페이지
+    anchor = "stock_area"
+
+    if not symbol:
+        symbol = "TSLA"
+        anchor = ""
 
     stock_data = ResultData.objects.filter(Q(func_name='stock_data_call') & Q(key_name=symbol)).order_by('-receipt_date').first()
     exch_data = ResultData.objects.filter(Q(func_name='exch_data_call') & Q(key_name='KRW2USD')).order_by('-receipt_date').first()
@@ -93,7 +98,7 @@ def main(request):
     main_data['bitcoin_change_percent'] = crypto_json_data.get('Bitcoin USD Change Percent')
     main_data['bitcoin_color'] = colorSelection(crypto_json_data.get('Bitcoin USD Change'))
 
-    return render(request, 'common/main.html', {'symbol': symbol, 'main_data': main_data, 'tech_list': tech_list, 'hist_label_list': hist_label_list, 'hist_data_list': hist_data_list, 'earn_label_list': earn_label_list, 'earn_act_data_list': earn_act_data_list, 'earn_est_data_list': earn_est_data_list})
+    return render(request, 'common/main.html', {'anchor': anchor, 'symbol': symbol, 'main_data': main_data, 'tech_list': tech_list, 'hist_label_list': hist_label_list, 'hist_data_list': hist_data_list, 'earn_label_list': earn_label_list, 'earn_act_data_list': earn_act_data_list, 'earn_est_data_list': earn_est_data_list})
 
 def colorSelection(data):
     if data[0:1] == '+':

@@ -13,9 +13,6 @@ def board_create(request, group):
     """
     Board 등록
     """
-    # SubNav Active 처리 파라미터
-    # request.session.target_nav_item = 'bbs'
-
     # 게시판 명칭
     group_name = Code.objects.filter(Q(group_code='BOARD') & Q(detail_code=group)).get().detail_code_name
 
@@ -38,9 +35,6 @@ def board_modify(request, board_id):
     """
     Board 수정
     """
-    # SubNav Active 처리 파라미터
-    # equest.session.target_nav_item = 'bbs'
-
     board = get_object_or_404(Board, pk=board_id)
 
     # 게시판 명칭

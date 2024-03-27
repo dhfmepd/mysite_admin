@@ -12,9 +12,6 @@ def reply_create(request, board_id):
     """
     Reply 등록
     """
-    # SubNav Active 처리 파라미터
-    request.session.target_nav_item = 'bbs'
-
     board = get_object_or_404(Board, pk=board_id)
     if request.method == 'POST':
         form = ReplyForm(request.POST)
@@ -48,9 +45,6 @@ def reply_modify(request, reply_id):
     """
     Reply 수정
     """
-    # SubNav Active 처리 파라미터
-    request.session.target_nav_item = 'bbs'
-
     reply = get_object_or_404(Reply, pk=reply_id)
     if request.user != reply.author:
         messages.error(request, '수정권한이 없습니다')

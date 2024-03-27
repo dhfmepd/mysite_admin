@@ -35,9 +35,6 @@ def comment_modify_board(request, comment_id):
     """
     Board Comment 수정
     """
-    # SubNav Active 처리 파라미터
-    request.session.target_nav_item = 'bbs'
-
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user != comment.author:
         messages.error(request, '댓글수정권한이 없습니다')
@@ -75,9 +72,6 @@ def comment_create_reply(request, reply_id):
     """
     Reply Comment 등록
     """
-    # SubNav Active 처리 파라미터
-    request.session.target_nav_item = 'bbs'
-
     reply = get_object_or_404(Reply, pk=reply_id)
     if request.method == "POST":
         form = CommentForm(request.POST)
@@ -100,9 +94,6 @@ def comment_modify_reply(request, comment_id):
     """
     Reply Comment 수정
     """
-    # SubNav Active 처리 파라미터
-    request.session.target_nav_item = 'bbs'
-
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user != comment.author:
         messages.error(request, '댓글수정권한이 없습니다')

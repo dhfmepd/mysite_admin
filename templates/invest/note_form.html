@@ -7,7 +7,7 @@
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Note 작성</h6>
             </div>
-            <form method="post">
+            <form id="mainForm" method="post">
                 <div class="card-body">
                     {% csrf_token %}
                     <!-- 오류표시 Start -->
@@ -30,17 +30,18 @@
                         <div class="form-row">
                             <div class="form-group col-md-2">
                                 <label for="type">Type</label>
-                                <select class="form-control" name="type" id="type" onchange="changeType(this)">
+                                <select class="form-control" name="type" id="type" onchange="changeType(this)" {% if note != None %} disabled {% endif %}>
                                     {% for v, k in form.fields.type.choices %}
-                                        <option value="{{ v }}" {% if form.fields.type.value == v %} selected {% endif %}>{{ k }}</option>
+                                        <option value="{{ v }}" {% if form.type.value == v %} selected {% endif %}>{{ k }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div id="stateGroup" class="form-group col-md-2" hidden="true">
                                 <label for="state">State</label>
                                 <select class="form-control" name="state" id="state">
-                                    <option value="BUY" selected>Buy</option>
-                                    <option value="SELL">Sell</option>
+                                    {% for v, k in form.fields.state.choices %}
+                                        <option value="{{ v }}" {% if form.state.value == v %} selected {% endif %}>{{ k }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div id="tickerGroup" class="form-group col-md-2" hidden="true">
@@ -90,12 +91,12 @@
                         <span class="text">목록</span>
                     </a>
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary btn-icon-split">
+                        <a class="submit-btn btn btn-primary btn-icon-split">
                             <span class="icon text-white-50">
                                 <i class="fas fa-save"></i>
                             </span>
                             <span class="text">저장</span>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </form>
@@ -103,6 +104,41 @@
     </div>
 
 <script type='text/javascript'>
+document.addEventListener("DOMContentLoaded", function(){
+    var type = document.getElementById("type");
+    var stateGroup = document.getElementById("stateGroup");
+    var tickerGroup = document.getElementById("tickerGroup");
+    var priceGroup = document.getElementById("priceGroup");
+    var quantityGroup = document.getElementById("quantityGroup");
+
+    if(type.options[type.selectedIndex].value == "TD") {
+        stateGroup.hidden = false;
+        tickerGroup.hidden = false;
+        priceGroup.hidden = false;
+        quantityGroup.hidden = false;
+    } else {
+        stateGroup.hidden = true;
+        tickerGroup.hidden = true;
+        priceGroup.hidden = true;
+        quantityGroup.hidden = true;
+
+        document.getElementById("state").selectedIndex = 0;
+        document.getElementById("ticker").value = "";
+        document.getElementById("price").value = "0";
+        document.getElementById("quantity").value = "0";
+    }
+});
+
+const submit_btn_elements = document.getElementsByClassName("submit-btn");
+Array.from(submit_btn_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        {% if note != None %}
+        document.getElementById('type').disabled = false;
+        {% endif %}
+        document.getElementById('mainForm').submit();
+    });
+});
+
 function changeType(target) {
     var stateGroup = document.getElementById("stateGroup");
     var tickerGroup = document.getElementById("tickerGroup");
@@ -126,5 +162,6 @@ function changeType(target) {
         document.getElementById("quantity").value = "0";
     }
 }
+
 </script>
 {% endblock %}

@@ -55,7 +55,7 @@
                                         {% if board.comment_set.count > 0 %}
                                         <div class="mt-3">
                                         {% for comment in board.comment_set.all %}
-                                            <div class="comment py-2 text-muted">
+                                            <div id="comment_{{ comment.id }}" class="comment py-2 text-muted">
                                                 <span style="white-space: pre-line;">{{ comment.content }}</span>
                                                 <span>
                                                     - {{ comment.author }}, {{ comment.create_date }}
@@ -132,7 +132,7 @@
                 <!-- 정렬영역 End -->
                 {% for reply in reply_list %}
 
-                <div class="row">
+                <div id="reply_{{reply.id}}" class="row">
                     <!-- 추천영역 Start -->
                     <div class="col-md-1 mb-2">
                         <div class="bg-light text-center p-3 border font-weight-bolder mb-1">{{reply.voter.count}}</div>
@@ -165,7 +165,7 @@
                                         {% if reply.comment_set.count > 0 %}
                                         <div class="mt-3">
                                         {% for comment in reply.comment_set.all %}
-                                            <div class="comment py-2 text-muted">
+                                            <div id="comment_{{ comment.id }}" class="comment py-2 text-muted">
                                                 <span style="white-space: pre-line;">{{ comment.content }}</span>
                                                 <span>
                                                     - {{ comment.author }}, {{ comment.create_date }}

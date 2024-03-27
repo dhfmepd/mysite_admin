@@ -8,43 +8,61 @@
     </div>
 
     <!-- DataTales Example -->
-    <div class="card shadow">
+    <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">{{ month_text }} {{ year }}</h6>
         </div>
 
         <div class="card-body">
+            <!-- 오류표시 Start -->
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                {% for field in form %}
+                    {% if field.errors %}
+                    <strong>{{ field.label }}</strong>
+                    {{ field.errors }}
+                    {% endif %}
+                {% endfor %}
+                </div>
+            {% endif %}
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
                         <tr class="calendar_header">
-                            <th class="text-center">Mon.</th>
-                            <th class="text-center">Tue.</th>
-                            <th class="text-center">Wed.</th>
-                            <th class="text-center">Thu.</th>
-                            <th class="text-center">Fri.</th>
-                            <th class="text-center">Sat.</th>
-                            <th class="text-center text-danger">Sun.</th>
+                            <th class="text-center" style="width: 14%;">Mon.</th>
+                            <th class="text-center" style="width: 14%;">Tue.</th>
+                            <th class="text-center" style="width: 14%;">Wed.</th>
+                            <th class="text-center" style="width: 14%;">Thu.</th>
+                            <th class="text-center" style="width: 14%;">Fri.</th>
+                            <th class="text-center" style="width: 14%;">Sat.</th>
+                            <th class="text-center text-danger"  style="width: 14%;">Sun.</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for week in cal_data %}
                         <tr>
-                            {% for day, color, note in week %}
-                                <td {% if day == today.day %} style="background-color: rgb(252 241 202);" {% endif %}>
+                            {% for day, color, memo_note, trade_note in week %}
+                                <td {% if cur_day.year == today.year and cur_day.month == today.month and day == today.day %} style="background-color: rgb(252 241 202);" {% endif %}>
                                 {% if day %}
-                                    <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-between mb-4">
                                         <div class="small text-left {{ color }}" >{{ day }}</div>
-                                        <a href="#" data-day="{{ day }}" class="write btn btn-info btn-circle btn-sm">
+                                        <a href="#" data-day="{{ day }}" class="write-btn btn-info btn-circle btn-sm">
                                             <i class="fas fa-pen-square"></i>
                                         </a>
                                     </div>
-                                    <div class="mb-4 py-3">
-                                        {% if note.count == 0 %}
-                                        <div>-</div>
-                                        {% else %}
-                                        <a href="#" data-day="{{ day }}" class="notecount">{{ note.count }} 건</a>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        {% if memo_note.count > 0 %}
+                                        <i class="fas fa-clipboard-list text-xs text-gray-600"> MEMO </i>
+
+                                        <a href="#" class="memo-note fas text-xs font-weight-bold" data-day="{{ day }}">{{ memo_note.count }}</a>
                                         {% endif %}
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        {% if trade_note.count > 0 %}
+                                        <i class="fas fa-clipboard-list text-xs text-gray-600"> TRADE </i>
+                                        <a href="#" class="trade-note fas text-xs font-weight-bold" data-day="{{ day }}">{{ trade_note.count }}</a>
+                                        {% endif %}
+                                        </div>
                                     </div>
                                 {% endif %}
                                 </td>
@@ -56,45 +74,109 @@
             </div>
         </div>
         <div class="card-footer d-flex justify-content-between">
-            <button class="previous btn btn-primary btn-icon-split">
+            <button class="previous-btn btn btn-primary btn-icon-split">
                 <span class="icon text-white-50">
                     <i class="fas fa-arrow-left"></i>
                 </span>
             </button>
-            <button class="next btn btn-primary btn-icon-split">
+            <button class="next-btn btn btn-primary btn-icon-split">
                 <span class="icon text-white-50">
                     <i class="fas fa-arrow-right"></i>
                 </span>
             </button>
         </div>
     </div>
+
+    <!-- DataTales Example -->
+    {% if note_list %}
+    <div id="note_table" class="card shadow">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">{{ tgt_header_text }}</h6>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 20px;">No</th>
+                            {% if tgt_type == "MM" %}
+                            <th class="text-center" style="width: 150px;">Subject</th>
+                            <th class="text-center">Content</th>
+                            {% else %}
+                            <th class="text-center" style="width: 50px;">State</th>
+                            <th class="text-center" style="width: 80px;">Ticker</th>
+                            <th class="text-center" style="width: 80px;">Price</th>
+                            <th class="text-center" style="width: 70px;">Quantity</th>
+                            <th class="text-center">Subject</th>
+                            {% endif %}
+                            <th class="text-center" style="width: 150px;">Author</th>
+                            <th class="text-center" style="width: 200px;">Create Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for note in note_list %}
+                        <tr class="text-center">
+                            <td>{{ note.row_number }}</td>
+                            {% if tgt_type == "MM" %}
+                            <td><a href="{% url 'invest:note_detail_calendar' note.id %}">{{ note.subject }}</a></td>
+                            <td class="text-left">{{ note.content }}</td>
+                            {% else %}
+                            <td><span class="badge badge-{% if note.state == 'BY' %}success{% else %}danger{% endif %} px-2 py-1">{{ note.get_state_display }}<span</td>
+                            <td>{{ note.ticker }}</td>
+                            <td class="text-right">{{ note.price }}</td>
+                            <td class="text-right">{{ note.quantity }}</td>
+                            <td><a href="{% url 'invest:note_detail_calendar' note.id %}">{{ note.subject }}</a></td>
+                            {% endif %}
+                            <td>{{ note.author.username }}</td>
+                            <td>{{ note.create_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 월 이동 FORM -->
     <form id="searchForm" method="get" action="{% url 'invest:calendar' %}">
         <input type="hidden" id="year" name="year" value="{{ year }}">
         <input type="hidden" id="month" name="month" value="{{ month }}">
+        <input type="hidden" id="tgt_type" name="tgt_type">
+        <input type="hidden" id="tgt_day" name="tgt_day">
         <input type="hidden" id="mode" name="mode">
     </form>
-    <form id="regForm" method="get" action="{% url 'invest:note_create_calendar' %}">
+    <!-- 노트 작성 FORM -->
+    <form id="writeForm" method="get" action="{% url 'invest:note_create_calendar' %}">
         <input type="hidden" id="record_date" name="record_date">
     </form>
 </div>
 
 <script type='text/javascript'>
-const previous_elements = document.getElementsByClassName("previous");
-Array.from(previous_elements).forEach(function(element) {
+{% if anchor %}
+$(document).ready(function(){
+    window.location = '#{{ anchor }}'
+});
+{% endif %}
+
+const previous_btn_elements = document.getElementsByClassName("previous-btn");
+Array.from(previous_btn_elements).forEach(function(element) {
     element.addEventListener('click', function() {
         document.getElementById("mode").value = "prev";
         document.getElementById("searchForm").submit();
     });
 });
-const next_elements = document.getElementsByClassName("next");
-Array.from(next_elements).forEach(function(element) {
+const next_btn_elements = document.getElementsByClassName("next-btn");
+Array.from(next_btn_elements).forEach(function(element) {
     element.addEventListener('click', function() {
         document.getElementById("mode").value = "next";
         document.getElementById("searchForm").submit();
     });
 });
-const write_elements = document.getElementsByClassName("write");
-Array.from(write_elements).forEach(function(element) {
+const write_btn_elements = document.getElementsByClassName("write-btn");
+Array.from(write_btn_elements).forEach(function(element) {
     element.addEventListener('click', function() {
         if(confirm("작성 하시겠습니까?")) {
             var year = "{{ year }}";
@@ -116,8 +198,24 @@ Array.from(write_elements).forEach(function(element) {
             }
 
             document.getElementById("record_date").value = record_date;
-            document.getElementById("regForm").submit();
+            document.getElementById("writeForm").submit();
         };
+    });
+});
+const memo_note_elements = document.getElementsByClassName("memo-note");
+Array.from(memo_note_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        document.getElementById("tgt_type").value = "MM";
+        document.getElementById("tgt_day").value = this.dataset.day;
+        document.getElementById("searchForm").submit();
+    });
+});
+const trade_note_elements = document.getElementsByClassName("trade-note");
+Array.from(trade_note_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        document.getElementById("tgt_type").value = "TD";
+        document.getElementById("tgt_day").value = this.dataset.day;
+        document.getElementById("searchForm").submit();
     });
 });
 </script>
