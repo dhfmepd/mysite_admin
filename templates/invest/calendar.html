@@ -50,19 +50,17 @@
                                             <i class="fas fa-pen-square"></i>
                                         </a>
                                     </div>
-                                    <div class="d-flex justify-content-between mb-2">
+                                    <div class="d-flex justify-content-between mb-2" style="height: 12px;">
                                         {% if memo_note.count > 0 %}
                                         <i class="fas fa-clipboard-list text-xs text-gray-600"> MEMO </i>
-
-                                        <a href="#" class="memo-note fas text-xs font-weight-bold" data-day="{{ day }}">{{ memo_note.count }}</a>
+                                        <a href="#" class="memo-note fas text-xs font-weight-bold" data-day="{{ day }}"><u>{{ memo_note.count }}</u></a>
                                         {% endif %}
                                     </div>
-                                    <div class="d-flex justify-content-between mb-2">
+                                    <div class="d-flex justify-content-between mb-2" style="height: 12px;">
                                         {% if trade_note.count > 0 %}
                                         <i class="fas fa-clipboard-list text-xs text-gray-600"> TRADE </i>
-                                        <a href="#" class="trade-note fas text-xs font-weight-bold" data-day="{{ day }}">{{ trade_note.count }}</a>
+                                        <a href="#" class="trade-note fas text-xs font-weight-bold" data-day="{{ day }}"><u>{{ trade_note.count }}</u></a>
                                         {% endif %}
-                                        </div>
                                     </div>
                                 {% endif %}
                                 </td>

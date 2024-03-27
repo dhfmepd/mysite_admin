@@ -44,8 +44,6 @@ def note_detail_calendar(request, note_id):
         return redirect('invest:calendar')
 
     if request.method == 'POST':
-        print(request.POST)
-
         form = NoteForm(request.POST, instance=note)
         if form.is_valid():
             note = form.save(commit=False)

@@ -4,6 +4,7 @@ from dateutil.relativedelta import *
 from django.db.models import Q, F
 from django.db.models.expressions import Window
 from django.db.models.functions import RowNumber
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.humanize.templatetags.humanize import ordinal
@@ -102,3 +103,23 @@ def convertDateInputFormat(year, month, day):
         date = date + '-' + str(day)
 
     return date
+
+
+@login_required(login_url='common:login')
+def note_list(request, type):
+    note_list = Note.objects.filter(type=type).annotate(row_number=Window(expression=RowNumber(), order_by=F('create_date').desc())).order_by("-create_date")
+
+    # 하단 조회결과 타이르 처리
+    tgt_header_text = type
+    for code, label in Note.type_choices:
+        if code == type:
+            tgt_header_text = label + " Note"
+
+    if note_list.count() == 0:
+        paginator = Paginator(note_list, 1)
+    else:
+        paginator = Paginator(note_list, note_list.count())
+    page_obj = paginator.get_page('1')
+
+    context = {'note_list': page_obj, 'tgt_type': type, 'tgt_header_text': tgt_header_text}
+    return render(request, 'invest/note_list.html', context)
