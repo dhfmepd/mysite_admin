@@ -4,14 +4,18 @@ import urllib3
 import json
 from time import sleep
 from bs4 import BeautifulSoup
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from ..forms import ResultDataForm
+from ..models import ResultData
+from common.models import Code
 
 @login_required(login_url='common:login')
 def main(request):
@@ -30,53 +34,70 @@ def main(request):
 
             keys = key_name.split(",")
 
+            today = datetime.today()
+            filter_date = datetime(today.year, today.month, today.day)
+
             for key in keys:
-                # Chrome 브라우저 열기
-                if not user_agent:
-                    options = webdriver.ChromeOptions()
-                else:
-                    options = Options()
-                    options.add_argument('user-agent=' + user_agent)
-                options.add_argument('log-level=3')
-                options.add_argument('headless')
+                receiptData = ResultData.objects.filter(
+                    Q(func_name=resultDataForm.func_name) & Q(key_name=key) & Q(receipt_date__gte=filter_date)).first()
 
-                driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-                # URL 파라미터 삽입
-                target_rep_url = target_url.replace('{key}', key)
+                if not receiptData:
+                    # Chrome 브라우저 열기
+                    if not user_agent:
+                        options = webdriver.ChromeOptions()
+                    else:
+                        options = Options()
+                        options.add_argument('user-agent=' + user_agent)
+                    options.add_argument('log-level=3')
+                    options.add_argument('headless')
 
-                # 페이지 연결시키기
-                driver.get(target_rep_url)
+                    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+                    # URL 파라미터 삽입
+                    target_rep_url = target_url.replace('{key}', key)
 
-                # BeautifulSoup 객체 생성
-                html = driver.page_source
-                soup = BeautifulSoup(html, 'html.parser')
+                    # 페이지 연결시키기
+                    driver.get(target_rep_url)
 
-                base_data = resultDataForm.base_data
-                base_data = base_data.replace("'", "\"")
+                    # BeautifulSoup 객체 생성
+                    html = driver.page_source
+                    soup = BeautifulSoup(html, 'html.parser')
 
-                if not base_data:
-                    mapData = dict()
-                else:
-                    mapData = json.loads(base_data)
+                    base_data = resultDataForm.base_data
+                    base_data = base_data.replace("'", "\"")
 
-                getattr(sys.modules[__name__], resultDataForm.func_name)(mapData, soup)
+                    if not base_data:
+                        mapData = dict()
+                    else:
+                        mapData = json.loads(base_data)
 
-                # 웹 페이지 종료
-                driver.quit()
+                    getattr(sys.modules[__name__], resultDataForm.func_name)(mapData, soup)
 
-                resultDataForm.id = None
-                resultDataForm.target_url = target_rep_url
-                resultDataForm.key_name = key
-                resultDataForm.result_data = json.dumps(mapData)
-                resultDataForm.receipt_date = timezone.now()
-                resultDataForm.save()
+                    # 웹 페이지 종료
+                    driver.quit()
+
+                    resultDataForm.id = None
+                    resultDataForm.target_url = target_rep_url
+                    resultDataForm.result_data = json.dumps(mapData)
+                    resultDataForm.key_name = key
+                    resultDataForm.receipt_date = timezone.now()
+                    resultDataForm.save()
 
                 sleep(1)
 
             return render(request, 'interface/crawling_result.html', {'result': resultDataForm})
     else:
         form = ResultDataForm()
-    context = {'form': form}
+        ticker_list = Code.objects.filter(Q(group_code='TICKER')).order_by('detail_code')
+        ticker_text = ""
+        for idx, code in enumerate(ticker_list):
+            if idx == 0:
+                ticker_text = ticker_text + code.detail_code
+            else:
+                ticker_text = ticker_text + "," + code.detail_code
+
+        user_agent = Code.objects.filter(Q(group_code='IF_COMMON') & Q(detail_code='USER_AGENT')).first()
+
+    context = {'form': form, 'ticker_text': ticker_text, 'user_agent': user_agent}
     return render(request, 'interface/crawling_main.html', context)
 
 def stock_data_call(mapData, soup):

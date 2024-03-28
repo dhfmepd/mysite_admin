@@ -84,38 +84,38 @@
 <script type='text/javascript'>
 function setDefaultData(idx) {
     if (idx == '1') {
-        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("user_agent").value = '{{ user_agent }}';
         document.getElementById("target_url").value = 'https://finviz.com/quote.ashx?t={key}&p=d';
         document.getElementById("func_name").value = 'stock_data_call';
-        document.getElementById("key_name").value = 'TSLA,AAPL,PLTR,AMZN,GOOG,CPNG';
+        document.getElementById("key_name").value = '{{ ticker_text }}';
     } else if (idx == '2') {
-        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("user_agent").value = '{{ user_agent }}';
         document.getElementById("target_url").value = 'https://finance.yahoo.com/quote/{key}/history';
         document.getElementById("func_name").value = 'stock_hist_data_call';
-        document.getElementById("key_name").value = 'TSLA,AAPL,PLTR,AMZN,GOOG,CPNG';
+        document.getElementById("key_name").value = '{{ ticker_text }}';
     } else if (idx == '3') {
-        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("user_agent").value = '{{ user_agent }}';
         document.getElementById("target_url").value = 'https://finance.yahoo.com/quote/{key}/analysis';
         document.getElementById("func_name").value = 'stock_earning_data_call';
-        document.getElementById("key_name").value = 'TSLA,AAPL,PLTR,AMZN,GOOG,CPNG';
+        document.getElementById("key_name").value = '{{ ticker_text }}';
     } else if (idx == '4') {
-        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("user_agent").value = '{{ user_agent }}';
         document.getElementById("target_url").value = 'https://kr.investing.com/currencies/usd-krw';
         document.getElementById("func_name").value = 'exch_data_call';
         document.getElementById("key_name").value = 'KRW2USD';
         document.getElementById("base_data").value = "{'From Currency': 'KRW', 'To Currency': 'USD'}";
     } else if (idx == '5') {
-        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("user_agent").value = '{{ user_agent }}';
         document.getElementById("target_url").value = 'https://finance.yahoo.com/world-indices/';
         document.getElementById("func_name").value = 'index_data_call';
         document.getElementById("key_name").value = 'DEFAULT';
     } else if (idx == '6') {
-        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("user_agent").value = '{{ user_agent }}';
         document.getElementById("target_url").value = 'https://finance.yahoo.com/crypto/';
         document.getElementById("func_name").value = 'crypto_data_call';
         document.getElementById("key_name").value = 'DEFAULT';
     } else if (idx == '7') {
-        document.getElementById("user_agent").value = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+        document.getElementById("user_agent").value = '{{ user_agent }}';
         document.getElementById("target_url").value = 'https://finance.yahoo.com/u/yahoo-finance/watchlists/tech-stocks-that-move-the-market';
         document.getElementById("func_name").value = 'tech_data_call';
         document.getElementById("key_name").value = 'DEFAULT';

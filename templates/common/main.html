@@ -152,12 +152,11 @@
             </button>
             <div class="dropdown-menu animated--fade-in"
                 aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#" onclick="setDefaultData('TSLA');">TSLA</a>
-                <a class="dropdown-item" href="#" onclick="setDefaultData('AAPL');">AAPL</a>
-                <a class="dropdown-item" href="#" onclick="setDefaultData('PLTR');">PLTR</a>
-                <a class="dropdown-item" href="#" onclick="setDefaultData('AMZN');">AMZN</a>
-                <a class="dropdown-item" href="#" onclick="setDefaultData('GOOG');">GOOG</a>
-                <a class="dropdown-item" href="#" onclick="setDefaultData('CPNG');">CPNG</a>
+                {% if ticker_list %}
+                {% for ticker_data in ticker_list %}
+                <a class="dropdown-item" href="#" onclick="setDefaultData('{{ ticker_data.detail_code }}');">{{ ticker_data.detail_code_name }}</a>
+                {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>

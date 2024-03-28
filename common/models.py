@@ -7,7 +7,7 @@ class Code(models.Model):
     detail_code_name = models.CharField(max_length=100)
     reference_value = models.CharField(max_length=50, null=True, blank=True)
     use_flag = models.BooleanField(default=True)
-    sort_no = models.IntegerField()
+    sort_no = models.IntegerField(null=True, blank=True)
     remark = models.TextField(null=True, blank=True)
 
     class Meta:

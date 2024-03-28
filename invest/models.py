@@ -13,6 +13,7 @@ class Note(models.Model):
     quantity = models.IntegerField(null=True, blank=True)
     subject = models.CharField(max_length=200, null=True, blank=True)
     content = models.TextField()
+    stock_data = models.TextField(null=True, blank=True)
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True, blank=True)
 
