@@ -59,6 +59,9 @@ def main(request):
     hist_data_list.reverse()
 
     main_data = dict()
+    # Stock Data Header
+    main_data['price'] = stock_dict_data.get('Price')
+    main_data['change'] = stock_dict_data.get('Change')
 
     main_data['ticker'] = stock_dict_data.get('Ticker')
     main_data['ticker_name'] = stock_dict_data.get('Ticker Name')
@@ -79,7 +82,7 @@ def main(request):
     main_data['pf_margin'] = stock_dict_data.get('Profit Margin')
     main_data['roi'] = stock_dict_data.get('ROI')
     main_data['short_float'] = stock_dict_data.get('Short Float')
-    main_data['rsi14'] = stock_dict_data.get('RSI(14)')
+    main_data['rsi14'] = stock_dict_data.get('RSI (14)')
     main_data['beta'] = stock_dict_data.get('Beta')
     main_data['pt'] = stock_dict_data.get('Target Price')
 

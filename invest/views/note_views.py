@@ -84,6 +84,8 @@ def note_detail_calendar(request, note_id):
 
             stock_data['ticker'] = stock_dict_data.get('Ticker')
             stock_data['ticker_name'] = stock_dict_data.get('Ticker Name')
+            stock_data['price'] = stock_dict_data.get('Price')
+            stock_data['change'] = stock_dict_data.get('Change')
             stock_data['per'] = stock_dict_data.get('P/E')
             stock_data['forward_per'] = stock_dict_data.get('Forward P/E')
             stock_data['eps_ttm'] = stock_dict_data.get('EPS (ttm)')

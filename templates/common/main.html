@@ -92,12 +92,13 @@
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Tech Stock 18</h6>
-            </div>
-
+    <div class="card shadow mb-4">
+        <!-- Card Header - Accordion -->
+        <a href="#techStockCard" class="d-block card-header py-3" data-toggle="collapse"
+            role="button" aria-expanded="true" aria-controls="techStockCard">
+            <h6 class="m-0 font-weight-bold text-primary">Tech Stock 18</h6>
+        </a>
+        <div class="collapse show" id="techStockCard">
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable">
@@ -143,7 +144,7 @@
     <hr>
 
     <div id="stock_area" class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">{{ symbol }}</h1>
+        <h1 class="h3 mb-0 text-gray-800">{{ main_data.ticker_name }}</h1>
         <div class="dropdown d-none d-sm-inline-block">
             <button class="btn btn-primary dropdown-toggle" type="button"
                 name="target_action" data-toggle="dropdown" aria-haspopup="true"
@@ -192,12 +193,14 @@
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Stock Details</h6>
-            </div>
+    <div class="card shadow mb-4">
+        <!-- Card Header - Accordion -->
+        <a href="#stockDetailCard" class="d-block card-header py-3" data-toggle="collapse"
+            role="button" aria-expanded="true" aria-controls="stockDetailCard">
+            <h6 class="m-0 font-weight-bold text-primary">Stock Details</h6>
+        </a>
 
+        <div class="collapse show" id="stockDetailCard">
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-borderless">
@@ -205,8 +208,8 @@
                             <tr>
                                 <th class="small font-weight-bold" style="width: 10%;">Ticker</th>
                                 <td class="small" style="width: 15%;">{{ main_data.ticker }}</td>
-                                <th class="small font-weight-bold" style="width: 10%;">Name</th>
-                                <td class="small" style="width: 15%;">{{ main_data.ticker_name }}</td>
+                                <th class="small font-weight-bold" style="width: 10%;">Price</th>
+                                <td class="small" style="width: 15%;">{{ main_data.price }} ({{ main_data.change }})</td>
                                 <th class="small font-weight-bold" style="width: 10%;">P/E</th>
                                 <td class="small" style="width: 15%;">{{ main_data.per }}</td>
                                 <th class="small font-weight-bold" style="width: 10%;">Forward P/E</th>

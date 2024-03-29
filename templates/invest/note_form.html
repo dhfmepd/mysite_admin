@@ -103,12 +103,14 @@
         </form>
     </div>
     {% if stock_data %}
-    <div class="card mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Stock Details</h6>
-            </div>
+    <div class="card shadow mb-4">
+        <!-- Card Header - Accordion -->
+        <a href="#stockDetailCard" class="d-block card-header py-3" data-toggle="collapse"
+            role="button" aria-expanded="true" aria-controls="stockDetailCard">
+            <h6 class="m-0 font-weight-bold text-primary">{{ stock_data.ticker_name }}</h6>
+        </a>
 
+        <div class="collapse show" id="stockDetailCard">
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-borderless">
@@ -116,8 +118,8 @@
                             <tr>
                                 <th class="small font-weight-bold" style="width: 10%;">Ticker</th>
                                 <td class="small" style="width: 15%;">{{ stock_data.ticker }}</td>
-                                <th class="small font-weight-bold" style="width: 10%;">Name</th>
-                                <td class="small" style="width: 15%;">{{ stock_data.ticker_name }}</td>
+                                <th class="small font-weight-bold" style="width: 10%;">Price</th>
+                                <td class="small" style="width: 15%;">{{ stock_data.price }} ({{ stock_data.change }})</td>
                                 <th class="small font-weight-bold" style="width: 10%;">P/E</th>
                                 <td class="small" style="width: 15%;">{{ stock_data.per }}</td>
                                 <th class="small font-weight-bold" style="width: 10%;">Forward P/E</th>
