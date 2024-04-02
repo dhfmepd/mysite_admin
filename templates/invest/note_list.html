@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Note List</h1>
+        <h1 class="h3 mb-0 text-gray-800">Note</h1>
     </div>
 
     <!-- DataTales Example -->
@@ -21,6 +21,7 @@
                             <th class="text-center" style="width: 20px;">No</th>
                             {% if tgt_type == "MM" %}
                             <th class="text-center" style="width: 150px;">Subject</th>
+                            <th class="text-center" style="width: 80px;">Ticker</th>
                             <th class="text-center">Content</th>
                             {% else %}
                             <th class="text-center" style="width: 50px;">State</th>
@@ -40,14 +41,15 @@
                         <tr class="text-center">
                             <td>{{ note.row_number }}</td>
                             {% if tgt_type == "MM" %}
-                            <td><a href="{% url 'invest:note_detail_calendar' note.id %}">{{ note.subject }}</a></td>
+                            <td class="text-left"><a href="{% url 'invest:note_detail_calendar' note.id %}">{{ note.subject }}</a></td>
+                            <td>{{ note.ticker }}</td>
                             <td class="text-left">{{ note.content }}</td>
                             {% else %}
                             <td><span class="badge badge-{% if note.state == 'BY' %}success{% else %}danger{% endif %} px-2 py-1">{{ note.get_state_display }}<span</td>
                             <td>{{ note.ticker }}</td>
                             <td class="text-right">{{ note.price }}</td>
                             <td class="text-right">{{ note.quantity }}</td>
-                            <td><a href="{% url 'invest:note_detail_calendar' note.id %}">{{ note.subject }}</a></td>
+                            <td class="text-left"><a href="{% url 'invest:note_detail_calendar' note.id %}">{{ note.subject }}</a></td>
                             {% endif %}
                             <td>{{ note.author.username }}</td>
                             <td>{{ note.create_date }}</td>

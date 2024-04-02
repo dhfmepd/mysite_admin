@@ -4,7 +4,7 @@ class ResultData(models.Model):
     user_agent = models.CharField(max_length=200, null=True, blank=True)
     target_url = models.CharField(max_length=200)
     func_name = models.CharField(max_length=50)
-    key_name = models.CharField(max_length=50)
+    key_name = models.CharField(max_length=200)
     base_data = models.TextField(null=True, blank=True)
     result_data = models.TextField()
     receipt_date = models.DateTimeField()

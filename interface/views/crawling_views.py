@@ -19,6 +19,7 @@ from common.models import Code
 
 @login_required(login_url='common:login')
 def main(request):
+    context = dict()
     if request.method == 'POST':
         form = ResultDataForm(request.POST)
         if form.is_valid():
@@ -97,7 +98,10 @@ def main(request):
 
         user_agent = Code.objects.filter(Q(group_code='IF_COMMON') & Q(detail_code='USER_AGENT')).first()
 
-    context = {'form': form, 'ticker_text': ticker_text, 'user_agent': user_agent}
+        context['ticker_text'] = ticker_text
+        context['user_agent'] = user_agent
+
+    context['form'] = form
     return render(request, 'interface/crawling_main.html', context)
 
 def stock_data_call(mapData, soup):

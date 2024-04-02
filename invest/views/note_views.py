@@ -4,10 +4,32 @@ from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q
+from django.core.paginator import Paginator
+from django.db.models.expressions import Window
+from django.db.models.functions import RowNumber
+from django.db.models import Q, F
 from ..forms import NoteForm
 from ..models import Note
 from interface.models import ResultData
+
+@login_required(login_url='common:login')
+def note_list(request, type):
+    note_list = Note.objects.filter(type=type).annotate(row_number=Window(expression=RowNumber(), order_by=F('create_date').desc())).order_by("-create_date")
+
+    # 하단 조회결과 타이르 처리
+    tgt_header_text = type
+    for code, label in Note.type_choices:
+        if code == type:
+            tgt_header_text = label + " Note"
+
+    if note_list.count() == 0:
+        paginator = Paginator(note_list, 1)
+    else:
+        paginator = Paginator(note_list, note_list.count())
+    page_obj = paginator.get_page('1')
+
+    context = {'note_list': page_obj, 'tgt_type': type, 'tgt_header_text': tgt_header_text}
+    return render(request, 'invest/note_list.html', context)
 
 @login_required(login_url='common:login')
 def note_create_calendar(request):
@@ -98,10 +120,10 @@ def note_detail_calendar(request, note_id):
             stock_data['psr'] = stock_dict_data.get('P/S')
             stock_data['pbr'] = stock_dict_data.get('P/B')
             stock_data['roe'] = stock_dict_data.get('ROE')
-            stock_data['gr_margin'] = stock_dict_data.get('Gross Margin')
-            stock_data['op_margin'] = stock_dict_data.get('Oper.Margin')
-            stock_data['pf_margin'] = stock_dict_data.get('Profit Margin')
-            stock_data['roi'] = stock_dict_data.get('ROI')
+            stock_data['eps_yoy_ttm'] = stock_dict_data.get('EPS Y/Y TTM')
+            stock_data['sale_yoy_ttm'] = stock_dict_data.get('Sales Y/Y TTM')
+            stock_data['eps_qoq'] = stock_dict_data.get('EPS Q/Q')
+            stock_data['sale_qoq'] = stock_dict_data.get('Sales Q/Q')
             stock_data['short_float'] = stock_dict_data.get('Short Float')
             stock_data['rsi14'] = stock_dict_data.get('RSI(14)')
             stock_data['beta'] = stock_dict_data.get('Beta')

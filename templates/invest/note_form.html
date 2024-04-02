@@ -119,7 +119,7 @@
                                 <th class="small font-weight-bold" style="width: 10%;">Ticker</th>
                                 <td class="small" style="width: 15%;">{{ stock_data.ticker }}</td>
                                 <th class="small font-weight-bold" style="width: 10%;">Price</th>
-                                <td class="small" style="width: 15%;">{{ stock_data.price }} ({{ stock_data.change }})</td>
+                                <td class="small" style="width: 15%;"><div class="{% if '-' in stock_data.change %}text-danger{% else %}text-success{% endif %}">{{ stock_data.price }} ({{ stock_data.change }})</div></td>
                                 <th class="small font-weight-bold" style="width: 10%;">P/E</th>
                                 <td class="small" style="width: 15%;">{{ stock_data.per }}</td>
                                 <th class="small font-weight-bold" style="width: 10%;">Forward P/E</th>
@@ -146,14 +146,14 @@
                                 <td class="small">{{ stock_data.roe }}</td>
                             </tr>
                             <tr>
-                                <th class="small font-weight-bold">Gross Margin</th>
-                                <td class="small">{{ stock_data.gr_margin }}</td>
-                                <th class="small font-weight-bold">Oper.Margin</th>
-                                <td class="small">{{ stock_data.op_margin }}</td>
-                                <th class="small font-weight-bold">Profit Margin</th>
-                                <td class="small">{{ stock_data.pf_margin }}</td>
-                                <th class="small font-weight-bold">ROI</th>
-                                <td class="small">{{ stock_data.roi }}</td>
+                                <th class="small font-weight-bold">EPS Y/Y TTM</th>
+                                <td class="small">{{ stock_data.eps_yoy_ttm }}</td>
+                                <th class="small font-weight-bold">Sales Y/Y TTM</th>
+                                <td class="small">{{ stock_data.sale_yoy_ttm }}</td>
+                                <th class="small font-weight-bold">EPS Q/Q</th>
+                                <td class="small">{{ stock_data.eps_qoq }}</td>
+                                <th class="small font-weight-bold">Sales Q/Q</th>
+                                <td class="small">{{ stock_data.sale_qoq }}</td>
                             </tr>
                             <tr>
                                 <th class="small font-weight-bold">Short Float</th>
