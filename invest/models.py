@@ -19,3 +19,16 @@ class Note(models.Model):
 
     class Meta:
         verbose_name_plural = '투자노트'
+
+class Portfolio(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_portfolio')
+    type = models.CharField(max_length=2)
+    ticker = models.CharField(max_length=10, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    quantity = models.IntegerField(null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    create_date = models.DateTimeField()
+    modify_date = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = '포트폴리오'

@@ -96,10 +96,10 @@ def main(request):
             else:
                 ticker_text = ticker_text + "," + code.detail_code
 
-        user_agent = Code.objects.filter(Q(group_code='IF_COMMON') & Q(detail_code='USER_AGENT')).first()
+        if_common = Code.objects.filter(Q(group_code='IF_COMMON') & Q(detail_code='USER_AGENT')).first()
 
         context['ticker_text'] = ticker_text
-        context['user_agent'] = user_agent
+        context['user_agent'] = if_common.remark
 
     context['form'] = form
     return render(request, 'interface/crawling_main.html', context)

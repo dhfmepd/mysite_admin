@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.humanize.templatetags.humanize import ordinal
 from common.models import Code
 from interface.models import ResultData
-from ..models import Note
+from ..models import Note, Portfolio
 
 @login_required(login_url='common:login')
 def calendar_main(request):
@@ -110,7 +110,7 @@ def convertDateInputFormat(year, month, day):
 @login_required(login_url='common:login')
 def stock_detail(request):
     symbol = request.GET.get('symbol', '')  # 페이지
-    ticker_list = Code.objects.filter(Q(group_code='TICKER')).order_by('detail_code_name')
+    ticker_list = Code.objects.filter(Q(group_code='TICKER') & Q(use_flag=True)).order_by('detail_code_name')
 
     if not symbol:
         symbol = ticker_list[0].detail_code
@@ -155,6 +155,8 @@ def stock_detail(request):
         main_data['beta'] = stock_dict_data.get('Beta')
         main_data['pt'] = stock_dict_data.get('Target Price')
 
+        main_data['receipt_date'] = stock_data.receipt_date
+
         rating_list = stock_dict_data.get('Rating List')
 
         for idx, rating_data in enumerate(rating_list):
@@ -198,3 +200,25 @@ def stock_detail(request):
         context['earn_est_data_list'] = list()
 
     return render(request, 'invest/stock_detail.html', context)
+
+@login_required(login_url='common:login')
+def portfolio_detail(request):
+    context = dict()
+
+    portfolio_list = Portfolio.objects.order_by("-amount")
+
+    portfolio_label_list = list()
+    portfolio_data_list = list()
+
+    if portfolio_list:
+        for index, portfolio_data in enumerate(portfolio_list):
+            portfolio_data.no = index + 1
+            if index < 10:
+                portfolio_label_list.append(portfolio_data.ticker)
+                portfolio_data_list.append(str(portfolio_data.amount))
+
+    context['portfolio_list'] = portfolio_list
+    context['portfolio_label_list'] = portfolio_label_list
+    context['portfolio_data_list'] = portfolio_data_list
+
+    return render(request, 'invest/portfolio_detail.html', context)

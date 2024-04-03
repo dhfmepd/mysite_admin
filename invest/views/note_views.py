@@ -9,7 +9,7 @@ from django.db.models.expressions import Window
 from django.db.models.functions import RowNumber
 from django.db.models import Q, F
 from ..forms import NoteForm
-from ..models import Note
+from ..models import Note, Portfolio
 from interface.models import ResultData
 
 @login_required(login_url='common:login')
@@ -57,6 +57,9 @@ def note_create_calendar(request):
             note.create_date = timezone.now()
             note.save()
 
+            # Portfolio 반영
+            apply_portfolio(request, note)
+
             return redirect('invest:calendar')
     else:
         form = NoteForm()
@@ -95,6 +98,9 @@ def note_detail_calendar(request, note_id):
             note.author = request.user
             note.create_date = timezone.now()
             note.save()
+
+            # Portfolio 반영
+            apply_portfolio(request, note)
 
             return redirect('invest:calendar')
     else:
@@ -137,3 +143,38 @@ def note_detail_calendar(request, note_id):
     context['display_date'] = display_date
 
     return render(request, 'invest/note_form.html', context)
+
+def apply_portfolio(request, note):
+    if note.type == 'TD':
+        portfolio = Portfolio.objects.filter(Q(ticker=note.ticker) & Q(type='ST')).first()
+        if portfolio:
+            ticker_note_list = Note.objects.filter(Q(type="TD") & Q(ticker=note.ticker)).order_by("record_date")
+
+            portfolio.price = 0
+            portfolio.quantity = 0
+            portfolio.amount = 0
+
+            for ticker_note_data in ticker_note_list:
+                if ticker_note_data.state == 'BY':
+                    portfolio.price = ((portfolio.price * portfolio.quantity) + (
+                                ticker_note_data.price * ticker_note_data.quantity)) / (
+                                                  portfolio.quantity + ticker_note_data.quantity)
+                    portfolio.quantity = portfolio.quantity + ticker_note_data.quantity
+                    portfolio.amount = portfolio.amount + (ticker_note_data.price * ticker_note_data.quantity)
+                else:
+                    portfolio.quantity = portfolio.quantity - ticker_note_data.quantity
+                    portfolio.amount = portfolio.amount - (ticker_note_data.price * ticker_note_data.quantity)
+
+            portfolio.modify_date = timezone.now()
+            portfolio.save()
+
+        else:
+            Portfolio.objects.create(
+                owner=request.user,
+                type="ST",
+                ticker=note.ticker,
+                price=note.price,
+                quantity=note.quantity,
+                amount=(note.price * note.quantity),
+                create_date=timezone.now()
+            )
