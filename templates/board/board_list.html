@@ -16,7 +16,7 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable">
+                <table class="table table-bordered" id="boardTable">
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 50px;">번호</th>
@@ -72,6 +72,11 @@
         </div>
     </div>
 </div>
-<!-- /.container-fluid -->
+
+<script type='text/javascript'>
+$(document).ready(function () {
+    $('#boardTable').DataTable();
+});
+</script>
 
 {% endblock %}

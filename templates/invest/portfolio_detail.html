@@ -9,31 +9,21 @@
         <h1 class="h3 mb-0 text-gray-800">Portfolio</h1>
     </div>
 
-    <div class="row">
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Portfolio Overview (Top Stock 10)</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-pie">
-                        <canvas id="myPieChart"></canvas>
-                    </div>
-                </div>
-            </div>
+    <!-- Area Chart -->
+    <div class="card shadow mb-4">
+        <!-- Card Header - Dropdown -->
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Top Stock 10</h6>
         </div>
-
-        <!-- Area Chart -->
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Portfolio Details (Top Stock 10)</h6>
+        <!-- Card Body -->
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xl-5 col-lg-5">
+                    <canvas id="portfolioChart"></canvas>
                 </div>
-                <!-- Card Body -->
-                <div class="card-body">
+                <div class="col-xl-7 col-lg-7">
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable">
+                        <table class="table table-bordered" id="portfolioTable">
                             <thead>
                                 <tr>
                                     <th class="text-center">No</th>
@@ -41,6 +31,7 @@
                                     <th class="text-center">Avg Price</th>
                                     <th class="text-center">Quantity</th>
                                     <th class="text-center">Amount</th>
+                                    <th class="text-center">Return</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,10 +39,11 @@
                                 {% for portfolio_data in portfolio_list %}
                                 <tr class="text-center">
                                     <td>{{ portfolio_data.no }}</td>
-                                    <td>{{ portfolio_data.ticker }}</td>
+                                    <td><a href="#" onclick="setDefaultData('{{ portfolio_data.ticker }}');">{{ portfolio_data.ticker }}</a></td>
                                     <td>{{ portfolio_data.price }}</td>
                                     <td>{{ portfolio_data.quantity }}</td>
                                     <td>{{ portfolio_data.amount }}</td>
+                                    <td class="text-{{ portfolio_data.return_style }}">{{ portfolio_data.return_amount }} ({{ portfolio_data.return_rate }}%)</td>
                                 </tr>
                                 {% endfor %}
                                 {% else %}
@@ -65,18 +57,148 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="card shadow mb-4">
+        <!-- Card Header - Accordion -->
+        <a href="#stockDetailCard" class="d-block card-header py-3" data-toggle="collapse"
+            role="button" aria-expanded="true" aria-controls="stockDetailCard">
+            <h6 class="m-0 font-weight-bold text-primary">Stock Details</h6>
+        </a>
+
+        <div class="collapse show" id="stockDetailCard">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th class="small font-weight-bold" style="width: 10%;">Ticker</th>
+                                <td class="small" style="width: 15%;">{{ main_data.ticker }}</td>
+                                <th class="small font-weight-bold" style="width: 10%;">Price</th>
+                                <td class="small" style="width: 15%;"><div class="{% if '-' in main_data.change %}text-danger{% else %}text-success{% endif %}">{{ main_data.price }} ({{ main_data.change }})</div></td>
+                                <th class="small font-weight-bold" style="width: 10%;">P/E</th>
+                                <td class="small" style="width: 15%;">{{ main_data.per }}</td>
+                                <th class="small font-weight-bold" style="width: 10%;">Forward P/E</th>
+                                <td class="small" style="width: 15%;">{{ main_data.forward_per }}</td>
+                            </tr>
+                            <tr>
+                                <th class="small font-weight-bold">Market Cap</th>
+                                <td class="small">{{ main_data.market_cap }}</td>
+                                <th class="small font-weight-bold">Earnings</th>
+                                <td class="small">{{ main_data.earnings }}</td>
+                                <th class="small font-weight-bold">EPS (ttm)</th>
+                                <td class="small">{{ main_data.eps_ttm }}</td>
+                                <th class="small font-weight-bold">EPS next Y</th>
+                                <td class="small">{{ main_data.eps_next_yr }}</td>
+                            </tr>
+                            <tr>
+                                <th class="small font-weight-bold">PEG</th>
+                                <td class="small">{{ main_data.peg }}</td>
+                                <th class="small font-weight-bold">P/S</th>
+                                <td class="small">{{ main_data.psr }}</td>
+                                <th class="small font-weight-bold">P/B</th>
+                                <td class="small">{{ main_data.pbr }}</td>
+                                <th class="small font-weight-bold">ROE</th>
+                                <td class="small">{{ main_data.roe }}</td>
+                            </tr>
+                            <tr>
+                                <th class="small font-weight-bold">EPS Y/Y TTM</th>
+                                <td class="small">{{ main_data.eps_yoy_ttm }}</td>
+                                <th class="small font-weight-bold">Sales Y/Y TTM</th>
+                                <td class="small">{{ main_data.sale_yoy_ttm }}</td>
+                                <th class="small font-weight-bold">EPS Q/Q</th>
+                                <td class="small">{{ main_data.eps_qoq }}</td>
+                                <th class="small font-weight-bold">Sales Q/Q</th>
+                                <td class="small">{{ main_data.sale_qoq }}</td>
+                            </tr>
+                            <tr>
+                                <th class="small font-weight-bold">Short Float</th>
+                                <td class="small">{{ main_data.short_float }}</td>
+                                <th class="small font-weight-bold">RSI(14)</th>
+                                <td class="small">{{ main_data.rsi14 }}</td>
+                                <th class="small font-weight-bold">Beta</th>
+                                <td class="small">{{ main_data.beta }}</td>
+                                <th class="small font-weight-bold">Target Price</th>
+                                <td class="small">{{ main_data.pt }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <!-- Card Header - Accordion -->
+        <a href="#techStockCard" class="d-block card-header py-3" data-toggle="collapse"
+            role="button" aria-expanded="true" aria-controls="techStockCard">
+            <h6 class="m-0 font-weight-bold text-primary">Rating</h6>
+        </a>
+        <div class="collapse show" id="techStockCard">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="stockTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Action</th>
+                                <th class="text-center">Analyst</th>
+                                <th class="text-center">Rating Change</th>
+                                <th class="text-center">Price Target Change</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% if rating_list %}
+                            {% for rating_data in rating_list %}
+                            <tr class="text-center">
+                                <td>{{ rating_data.no }}</td>
+                                <td>{{ rating_data.date }}</td>
+                                <td><span class="badge badge-{% if rating_data.action == 'Upgrade' %}success{% elif rating_data.action == 'Downgrade' %}danger{% else %}secondary{% endif %} px-2 py-1">{{ rating_data.action }}</span></td>
+                                <td>{{ rating_data.analyst }}</td>
+                                <td>{{ rating_data.rating_change }}</td>
+                                <td>{{ rating_data.price_target_change }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">데이터가 없습니다.</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="searchForm" method="get" action="{% url 'invest:portfolio_detail' %}">
+        <input type="hidden" id="ticker" name="ticker" value="{{ ticker }}">
+    </form>
 </div>
 <!-- /.container-fluid -->
 
 </div>
 <!-- End of Main Content -->
 
-
 <!-- Page level plugins -->
 <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
 
 <script type='text/javascript'>
+$(document).ready(function () {
+    $('#portfolioTable').DataTable({
+        "paging": false,
+        "searching": false,
+        "ordering": true,
+        "info": false,
+        "scrollCollapse": true,
+        "scrollY": '245px'
+    });
+
+    $('#stockTable').DataTable();
+});
+
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
@@ -105,9 +227,9 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 // Pie Chart Example
-var ctx = document.getElementById("myPieChart");
-var myPieChart = new Chart(ctx, {
-    type: 'doughnut',
+var ctx = document.getElementById("portfolioChart");
+var portfolioChart = new Chart(ctx, {
+    type: 'polarArea',
     data: {
         labels: {{ portfolio_label_list | safe }},
         datasets: [{
@@ -144,5 +266,10 @@ var myPieChart = new Chart(ctx, {
         cutoutPercentage: 80,
     },
 });
+
+function setDefaultData(ticker) {
+    document.getElementById("ticker").value = ticker;
+    document.getElementById("searchForm").submit();
+}
 </script>
 {% endblock %}

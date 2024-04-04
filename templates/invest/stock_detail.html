@@ -133,7 +133,7 @@
         <div class="collapse show" id="techStockCard">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable">
+                    <table class="table table-bordered" id="stockTable">
                         <thead>
                             <tr>
                                 <th class="text-center">No</th>
@@ -183,6 +183,17 @@
 <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
 
 <script type='text/javascript'>
+$(document).ready(function () {
+    $('#stockTable').DataTable({
+        "columnDefs": [
+            {
+                target: 0,
+                searchable: false
+            }
+        ]
+    });
+});
+
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';

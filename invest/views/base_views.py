@@ -1,5 +1,6 @@
 import json
 import calendar
+from decimal import Decimal
 from datetime import datetime
 from dateutil.relativedelta import *
 from django.db.models import Q, F
@@ -124,51 +125,9 @@ def stock_detail(request):
     hist_data = ResultData.objects.filter(Q(func_name='stock_hist_data_call') & Q(key_name=symbol)).order_by('-receipt_date').first()
     earn_data = ResultData.objects.filter(Q(func_name='stock_earning_data_call') & Q(key_name=symbol)).order_by('-receipt_date').first()
 
-    main_data = dict()
-
     if stock_data:
         stock_dict_data = json.loads(stock_data.result_data)
-
-        main_data['price'] = stock_dict_data.get('Price')
-        main_data['change'] = stock_dict_data.get('Change')
-
-        main_data['ticker'] = stock_dict_data.get('Ticker')
-        main_data['ticker_name'] = stock_dict_data.get('Ticker Name')
-        main_data['per'] = stock_dict_data.get('P/E')
-        main_data['forward_per'] = stock_dict_data.get('Forward P/E')
-        main_data['eps_ttm'] = stock_dict_data.get('EPS (ttm)')
-        main_data['market_cap'] = stock_dict_data.get('Market Cap')
-        main_data['earnings'] = stock_dict_data.get('Earnings')
-        main_data['eps_ttm'] = stock_dict_data.get('EPS (ttm)')
-        main_data['eps_next_yr'] = stock_dict_data.get('EPS next Y')
-
-        main_data['peg'] = stock_dict_data.get('PEG')
-        main_data['psr'] = stock_dict_data.get('P/S')
-        main_data['pbr'] = stock_dict_data.get('P/B')
-        main_data['roe'] = stock_dict_data.get('ROE')
-        main_data['eps_yoy_ttm'] = stock_dict_data.get('EPS Y/Y TTM')
-        main_data['sale_yoy_ttm'] = stock_dict_data.get('Sales Y/Y TTM')
-        main_data['eps_qoq'] = stock_dict_data.get('EPS Q/Q')
-        main_data['sale_qoq'] = stock_dict_data.get('Sales Q/Q')
-        main_data['short_float'] = stock_dict_data.get('Short Float')
-        main_data['rsi14'] = stock_dict_data.get('RSI (14)')
-        main_data['beta'] = stock_dict_data.get('Beta')
-        main_data['pt'] = stock_dict_data.get('Target Price')
-
-        main_data['receipt_date'] = stock_data.receipt_date
-
-        rating_list = stock_dict_data.get('Rating List')
-
-        for idx, rating_data in enumerate(rating_list):
-            rating_data['no'] = idx+1
-            rating_data['date'] = rating_data.get("Date")
-            rating_data['action'] = rating_data.get("Action")
-            rating_data['analyst'] = rating_data.get("Analyst")
-            rating_data['rating_change'] = rating_data.get("Rating Change")
-            rating_data['price_target_change'] = rating_data.get("Price Target Change")
-
-        context['main_data'] = main_data
-        context['rating_list'] = rating_list
+        setStockDetail(stock_dict_data, context)
 
     hist_label_list = list()
     hist_data_list = list()
@@ -203,22 +162,97 @@ def stock_detail(request):
 
 @login_required(login_url='common:login')
 def portfolio_detail(request):
+    # 파라미터
+    ticker = request.GET.get('ticker', '')
+
     context = dict()
 
     portfolio_list = Portfolio.objects.order_by("-amount")
 
+    if not ticker:
+        if len(portfolio_list) > 0:
+            print('Ticker ::::: ' + portfolio_list[0].ticker)
+            ticker = portfolio_list[0].ticker
+    
     portfolio_label_list = list()
     portfolio_data_list = list()
+    portfolio_table_list = list()
 
     if portfolio_list:
         for index, portfolio_data in enumerate(portfolio_list):
             portfolio_data.no = index + 1
             if index < 10:
+                stock_data = ResultData.objects.filter(Q(func_name='stock_data_call') & Q(key_name=portfolio_data.ticker)).order_by('-receipt_date').first()
+                stock_dict_data = json.loads(stock_data.result_data)
+
                 portfolio_label_list.append(portfolio_data.ticker)
                 portfolio_data_list.append(str(portfolio_data.amount))
+                # 수익률
+                return_rate = (Decimal(stock_dict_data.get('Price')) / portfolio_data.price - 1) * 100
 
-    context['portfolio_list'] = portfolio_list
+                if return_rate > 0:
+                    portfolio_data.return_rate = '+' + str(round(return_rate, 2))
+                    portfolio_data.return_style = "success"
+                elif return_rate < 0:
+                    portfolio_data.return_rate = '-' + str(round(return_rate, 2))
+                    portfolio_data.return_style = "danger"
+                else:
+                    portfolio_data.return_rate = str(round(return_rate, 2))
+                    portfolio_data.return_style = "dark"
+
+                portfolio_data.return_amount = portfolio_data.amount + round(portfolio_data.amount * return_rate / 100, 2)
+
+                portfolio_table_list.append(portfolio_data)
+
+                if portfolio_data.ticker == ticker:
+                    setStockDetail(stock_dict_data, context)
+
+    context['portfolio_list'] = portfolio_table_list
     context['portfolio_label_list'] = portfolio_label_list
     context['portfolio_data_list'] = portfolio_data_list
 
     return render(request, 'invest/portfolio_detail.html', context)
+
+
+def setStockDetail(stock_dict_data, context):
+    main_data = dict()
+
+
+    main_data['price'] = stock_dict_data.get('Price')
+    main_data['change'] = stock_dict_data.get('Change')
+
+    main_data['ticker'] = stock_dict_data.get('Ticker')
+    main_data['ticker_name'] = stock_dict_data.get('Ticker Name')
+    main_data['per'] = stock_dict_data.get('P/E')
+    main_data['forward_per'] = stock_dict_data.get('Forward P/E')
+    main_data['eps_ttm'] = stock_dict_data.get('EPS (ttm)')
+    main_data['market_cap'] = stock_dict_data.get('Market Cap')
+    main_data['earnings'] = stock_dict_data.get('Earnings')
+    main_data['eps_ttm'] = stock_dict_data.get('EPS (ttm)')
+    main_data['eps_next_yr'] = stock_dict_data.get('EPS next Y')
+
+    main_data['peg'] = stock_dict_data.get('PEG')
+    main_data['psr'] = stock_dict_data.get('P/S')
+    main_data['pbr'] = stock_dict_data.get('P/B')
+    main_data['roe'] = stock_dict_data.get('ROE')
+    main_data['eps_yoy_ttm'] = stock_dict_data.get('EPS Y/Y TTM')
+    main_data['sale_yoy_ttm'] = stock_dict_data.get('Sales Y/Y TTM')
+    main_data['eps_qoq'] = stock_dict_data.get('EPS Q/Q')
+    main_data['sale_qoq'] = stock_dict_data.get('Sales Q/Q')
+    main_data['short_float'] = stock_dict_data.get('Short Float')
+    main_data['rsi14'] = stock_dict_data.get('RSI (14)')
+    main_data['beta'] = stock_dict_data.get('Beta')
+    main_data['pt'] = stock_dict_data.get('Target Price')
+
+    rating_list = stock_dict_data.get('Rating List')
+
+    for idx, rating_data in enumerate(rating_list):
+        rating_data['no'] = idx + 1
+        rating_data['date'] = rating_data.get("Date")
+        rating_data['action'] = rating_data.get("Action")
+        rating_data['analyst'] = rating_data.get("Analyst")
+        rating_data['rating_change'] = rating_data.get("Rating Change")
+        rating_data['price_target_change'] = rating_data.get("Price Target Change")
+
+    context['main_data'] = main_data
+    context['rating_list'] = rating_list
