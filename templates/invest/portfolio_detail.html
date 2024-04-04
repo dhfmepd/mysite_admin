@@ -132,38 +132,40 @@
         <!-- Card Header - Accordion -->
         <a href="#techStockCard" class="d-block card-header py-3" data-toggle="collapse"
             role="button" aria-expanded="true" aria-controls="techStockCard">
-            <h6 class="m-0 font-weight-bold text-primary">Rating</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Trade History</h6>
         </a>
         <div class="collapse show" id="techStockCard">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="stockTable">
+                    <table class="table table-bordered" id="noteTable">
                         <thead>
                             <tr>
-                                <th class="text-center">No</th>
-                                <th class="text-center">Date</th>
-                                <th class="text-center">Action</th>
-                                <th class="text-center">Analyst</th>
-                                <th class="text-center">Rating Change</th>
-                                <th class="text-center">Price Target Change</th>
+                                <th class="text-center" style="width: 20px;">No</th>
+                                <th class="text-center" style="width: 100px;">Date</th>
+                                <th class="text-center" style="width: 50px;">State</th>
+                                <th class="text-center" style="width: 80px;">Price</th>
+                                <th class="text-center" style="width: 70px;">Quantity</th>
+                                <th class="text-center">Subject</th>
+                                <th class="text-center" style="width: 150px;">Author</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {% if rating_list %}
-                            {% for rating_data in rating_list %}
+                            {% if note_list %}
+                            {% for note in note_list %}
                             <tr class="text-center">
-                                <td>{{ rating_data.no }}</td>
-                                <td>{{ rating_data.date }}</td>
-                                <td><span class="badge badge-{% if rating_data.action == 'Upgrade' %}success{% elif rating_data.action == 'Downgrade' %}danger{% else %}secondary{% endif %} px-2 py-1">{{ rating_data.action }}</span></td>
-                                <td>{{ rating_data.analyst }}</td>
-                                <td>{{ rating_data.rating_change }}</td>
-                                <td>{{ rating_data.price_target_change }}</td>
+                                <td>{{ note.row_number }}</td>
+                                <td>{{ note.record_date }}</td>
+                                <td><span class="badge badge-{% if note.state == 'BY' %}success{% else %}danger{% endif %} px-2 py-1">{{ note.get_state_display }}<span</td>
+                                <td class="text-right">{{ note.price }}</td>
+                                <td class="text-right">{{ note.quantity }}</td>
+                                <td class="text-left"><a href="{% url 'invest:note_detail_calendar' note.id %}">{{ note.subject }}</a></td>
+                                <td>{{ note.author.username }}</td>
                             </tr>
                             {% endfor %}
                             {% else %}
                             <tr>
-                                <td colspan="6" class="text-center">데이터가 없습니다.</td>
+                                <td colspan="8" class="text-center">There are no registered posts.</td>
                             </tr>
                             {% endif %}
                         </tbody>
@@ -196,7 +198,7 @@ $(document).ready(function () {
         "scrollY": '245px'
     });
 
-    $('#stockTable').DataTable();
+    $('#noteTable').DataTable();
 });
 
 // Set new default font family and font color to mimic Bootstrap's default styling

@@ -17,7 +17,7 @@
                 aria-labelledby="dropdownMenuButton">
                 {% if ticker_list %}
                 {% for ticker_data in ticker_list %}
-                <a class="dropdown-item" href="#" onclick="setDefaultData('{{ ticker_data.detail_code }}');">{{ ticker_data.detail_code_name }}</a>
+                <a class="dropdown-item" href="#" onclick="setDefaultData('{{ ticker_data.detail_code }}');">[{{ ticker_data.detail_code }}] {{ ticker_data.detail_code_name }}</a>
                 {% endfor %}
                 {% endif %}
             </div>
@@ -59,7 +59,7 @@
         <!-- Card Header - Accordion -->
         <a href="#stockDetailCard" class="d-block card-header py-3" data-toggle="collapse"
             role="button" aria-expanded="true" aria-controls="stockDetailCard">
-            <h6 class="m-0 font-weight-bold text-primary">Stock Details</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Details</h6>
         </a>
 
         <div class="collapse show" id="stockDetailCard">

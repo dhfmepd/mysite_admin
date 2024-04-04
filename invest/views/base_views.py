@@ -111,7 +111,7 @@ def convertDateInputFormat(year, month, day):
 @login_required(login_url='common:login')
 def stock_detail(request):
     symbol = request.GET.get('symbol', '')  # 페이지
-    ticker_list = Code.objects.filter(Q(group_code='TICKER') & Q(use_flag=True)).order_by('detail_code_name')
+    ticker_list = Code.objects.filter(Q(group_code='TICKER') & Q(use_flag=True)).order_by('detail_code')
 
     if not symbol:
         symbol = ticker_list[0].detail_code
@@ -206,6 +206,8 @@ def portfolio_detail(request):
 
                 if portfolio_data.ticker == ticker:
                     setStockDetail(stock_dict_data, context)
+
+                context['note_list'] = Note.objects.filter(Q(type="TD") & Q(ticker=ticker)).annotate(row_number=Window(expression=RowNumber(), order_by=F('create_date').desc())).order_by("-create_date")
 
     context['portfolio_list'] = portfolio_table_list
     context['portfolio_label_list'] = portfolio_label_list
